@@ -331,8 +331,8 @@ function UserDetailDrawer({ user, onClose }) {
 /* ------------------------------------------------------------------ */
 /* MAIN COMPONENT                                                       */
 /* ------------------------------------------------------------------ */
-export function Users() {
-    const [users, setUsers] = useState(INITIAL_USERS);
+export function Users({ initialUsers = [], onAdd = async () => {} }) {
+    const [users, setUsers] = useState(initialUsers);
     const [search, setSearch] = useState("");
     const [roleFilter, setRoleFilter] = useState("all");
     const [showAdd, setShowAdd] = useState(false);
@@ -352,18 +352,11 @@ export function Users() {
         });
     }, [users, search, roleFilter]);
 
-    const handleAdd = useCallback((form) => {
-        const newUser = {
-            id: Date.now(),
-            name: form.name,
-            email: form.email,
-            address: form.address,
-            role: form.role,
-            rating: form.role === "owner" ? 0 : null,
-        };
-        setUsers((prev) => [newUser, ...prev]);
+    const handleAdd = useCallback(async (form) => {
+        await onAdd(form);
+        setUsers((current) => [{ ...form, id: Date.now(), rating: null }, ...current]);
         setShowAdd(false);
-    }, []);
+    }, [onAdd]);
 
     return (
         <div className="ud-root max-w-screen">

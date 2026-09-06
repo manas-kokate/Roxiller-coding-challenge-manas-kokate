@@ -1,5 +1,8 @@
 import React, { useState, useEffect, useRef } from "react";
 import { Mail, Lock, Eye, EyeOff, User, ShieldCheck, Store, Star, ArrowRight, MapPin, Sun, Moon } from "lucide-react";
+import { useNavigate } from "react-router-dom";
+import { authApi } from "../api";
+import { LoadingOverlay, Toast } from "./Feedback";
 
 // Colors and fonts live in index.css (--color-bg / --color-ink / .theme-dark,
 // .font-display / .font-body). Change the theme once there and it updates
@@ -7,9 +10,9 @@ import { Mail, Lock, Eye, EyeOff, User, ShieldCheck, Store, Star, ArrowRight, Ma
 // component below.
 
 const ROLES = [
-    { id: "user", label: "User", icon: User, idLabel: "Email or username", placeholder: "you@example.com" },
-    { id: "admin", label: "Admin", icon: ShieldCheck, idLabel: "Admin ID", placeholder: "admin-004" },
-    { id: "owner", label: "Store owner", icon: Store, idLabel: "Store email", placeholder: "owner@yourstore.com" },
+    { id: "user", label: "User", icon: User, idLabel: "Email or username", placeholder: "priyanka.deshmukh92@gmail.com" },
+    { id: "admin", label: "Admin", icon: ShieldCheck, idLabel: "Admin ID", placeholder: "adm-2291" },
+    { id: "owner", label: "Store owner", icon: Store, idLabel: "Store email", placeholder: "hello@fenwicktailors.com" },
 ];
 
 const REVIEWS = [
@@ -46,8 +49,61 @@ function useCountUp(value, duration = 1400) {
     return display;
 }
 
+// --- Signup validation helpers -------------------------------------------------
+const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+// 8-16 chars, at least one uppercase letter and one special character
+const PASSWORD_REGEX = /^(?=.*[A-Z])(?=.*[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?`~]).{8,16}$/;
+
+function validateSignupFields({ name, email, address, password }) {
+    const errors = {};
+
+    const trimmedName = name.trim();
+    if (!trimmedName) {
+        errors.name = "Name is required.";
+    } else if (trimmedName.length < 20) {
+        errors.name = "Name must be at least 20 characters.";
+    } else if (trimmedName.length > 60) {
+        errors.name = "Name must be at most 60 characters.";
+    }
+
+    const trimmedEmail = email.trim();
+    if (!trimmedEmail) {
+        errors.email = "Email is required.";
+    } else if (!EMAIL_REGEX.test(trimmedEmail)) {
+        errors.email = "Enter a valid email address.";
+    }
+
+    const trimmedAddress = address.trim();
+    if (trimmedAddress.length > 400) {
+        errors.address = "Address must be at most 400 characters.";
+    }
+
+    if (!password) {
+        errors.password = "Password is required.";
+    } else if (!PASSWORD_REGEX.test(password)) {
+        errors.password = "Password must be 8-16 characters and include at least one uppercase letter and one special character.";
+    }
+
+    return errors;
+}
+
+function FieldShell({ children, label, focused, error }) {
+    return (
+        <div>
+            <label className="mb-1.5 block text-[12.5px] font-semibold" style={{ color: themeColor("ink", 0.6) }}>{label}</label>
+            <div className="flex items-center gap-2.5 rounded-lg border px-3.5 py-2.5 transition-shadow duration-200" style={{
+                backgroundColor: themeColor("ink", 0.05),
+                borderColor: error ? "#dc2626" : focused ? themeColor("ink", 1) : themeColor("ink", 0.18),
+                boxShadow: focused ? `0 0 0 3px ${themeColor("ink", 0.14)}` : "none",
+            }}>{children}</div>
+            {error && <p className="mt-1 text-[11.5px] font-semibold text-red-600">{error}</p>}
+        </div>
+    );
+}
+
 export default function ShopRatingLogin() {
-    const [dark, setDark] = useState(false);
+    const navigate = useNavigate();
+    const [dark, setDark] = useState(true);
     const [mode, setMode] = useState("login");
     const [role, setRole] = useState("user");
     const [showPassword, setShowPassword] = useState(false);
@@ -59,7 +115,67 @@ export default function ShopRatingLogin() {
     const [signupEmail, setSignupEmail] = useState("");
     const [signupAddress, setSignupAddress] = useState("");
     const [signupPassword, setSignupPassword] = useState("");
+    const [signupRole, setSignupRole] = useState("user");
     const [showSignupPassword, setShowSignupPassword] = useState(false);
+    const [signupErrors, setSignupErrors] = useState({});
+    const [error, setError] = useState("");
+    const [loading, setLoading] = useState(false);
+    const [notice, setNotice] = useState(() => {
+        const stored = sessionStorage.getItem("flashNotice");
+        sessionStorage.removeItem("flashNotice");
+        return stored ? JSON.parse(stored) : null;
+    });
+
+    const handleLogin = async (event) => {
+        event.preventDefault();
+        setError("");
+        setLoading(true);
+        try {
+            const result = await authApi.login({ email: loginId.trim(), password });
+            if (result.user.role !== role) {
+                throw new Error(`This account is registered as a ${result.user.role}.`);
+            }
+            localStorage.setItem("session", JSON.stringify({ token: result.token, user: result.user }));
+            sessionStorage.setItem("flashNotice", JSON.stringify({ type: "success", message: "Welcome back — you’re signed in." }));
+            window.location.assign("/dashboard");
+        } catch (err) {
+            setError(err.message || "Unable to log in");
+            setNotice({ type: "error", message: err.message || "Unable to log in" });
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    const handleSignup = async (event) => {
+        event.preventDefault();
+        setError("");
+
+        const fieldErrors = validateSignupFields({
+            name: signupName,
+            email: signupEmail,
+            address: signupAddress,
+            password: signupPassword,
+        });
+        setSignupErrors(fieldErrors);
+        if (Object.keys(fieldErrors).length > 0) {
+            return;
+        }
+
+        setLoading(true);
+        try {
+            await authApi.signup({ name: signupName.trim(), email: signupEmail.trim(), address: signupAddress.trim(), password: signupPassword, role: signupRole });
+            setMode("login");
+            setLoginId(signupEmail.trim());
+            setPassword("");
+            setSignupErrors({});
+            setNotice({ type: "success", message: "Account created. You can sign in now." });
+        } catch (err) {
+            setError(err.message || "Unable to create account");
+            setNotice({ type: "error", message: err.message || "Unable to create account" });
+        } finally {
+            setLoading(false);
+        }
+    };
 
     const activeRole = ROLES.find((r) => r.id === role);
     const roleIndex = ROLES.findIndex((r) => r.id === role);
@@ -86,7 +202,7 @@ export default function ShopRatingLogin() {
         );
     };
 
-    const FieldShell = ({ children, label, focused }) => (
+    const LegacyFieldShell = ({ children, label, focused }) => (
         <div>
             <label className="mb-1.5 block text-[12.5px] font-semibold" style={{ color: themeColor("ink", 0.6) }}>{label}</label>
             <div
@@ -138,8 +254,8 @@ export default function ShopRatingLogin() {
 
     return (
         <div
-            className={`relative min-h-screen w-full overflow-hidden font-body transition-colors duration-300 ${dark ? "theme-dark" : ""}`}
-            style={{ backgroundColor: themeColor("bg", 1) }}
+            className="relative min-h-screen w-full overflow-hidden font-body transition-colors duration-300"
+            style={{ backgroundColor: themeColor("bg", 1), "--color-bg": dark ? "18 18 19" : "247 245 240", "--color-ink": dark ? "245 243 239" : "26 20 8" }}
         >
             <style>{`
         @keyframes marquee { from { transform: translateY(0); } to { transform: translateY(-50%); } }
@@ -239,7 +355,7 @@ export default function ShopRatingLogin() {
                                 </div>
 
                                 {/* Login form */}
-                                <form className="mt-6 space-y-4" onSubmit={(e) => e.preventDefault()}>
+                                <form className="mt-6 space-y-4" onSubmit={handleLogin}>
                                     <FieldShell label={activeRole.idLabel} focused={focusedField === "id"}>
                                         <Mail size={16} style={{ color: themeColor("ink", 0.5) }} />
                                         <input
@@ -271,8 +387,9 @@ export default function ShopRatingLogin() {
                                         </button>
                                     </FieldShell>
 
-                                    <div className="flex justify-end">
-                                        <a href="#" className="text-[12.5px] font-semibold hover:opacity-70 transition-opacity" style={{ color: themeColor("ink", 1) }}>Forgot password?</a>
+                                    <div className="flex justify-between gap-3">
+                                        {error && <p className="text-sm font-semibold text-red-600" role="alert">{error}</p>}
+                                        <button type="button" onClick={() => navigate("/reset-password")} className="ml-auto text-[12.5px] font-semibold hover:opacity-70" style={{ color: themeColor("ink", 1) }}>Forgot password?</button>
                                     </div>
 
                                     <button
@@ -280,7 +397,7 @@ export default function ShopRatingLogin() {
                                         className="btn-shimmer relative mt-2 flex w-full items-center justify-center gap-2 overflow-hidden rounded-lg py-3 text-sm font-bold transition-transform hover:scale-[1.015] active:scale-[0.98]"
                                         style={{ backgroundColor: themeColor("ink", 1), color: themeColor("bg", 1) }}
                                     >
-                                        <span className="relative z-10">Log in</span>
+                                        <span className="relative z-10">{loading ? "Logging in..." : "Log in"}</span>
                                         <ArrowRight size={15} className="relative z-10" />
                                     </button>
                                 </form>
@@ -301,10 +418,14 @@ export default function ShopRatingLogin() {
                         ) : (
                             <div key="signup" className="panel-swap">
                                 <h2 className="font-display text-2xl font-bold" style={{ color: themeColor("ink", 1) }}>Create your account</h2>
-                                <p className="mt-1.5 text-sm font-medium" style={{ color: themeColor("ink", 0.6) }}>Sign up as a user to start rating shops</p>
+                                <p className="mt-1.5 text-sm font-medium" style={{ color: themeColor("ink", 0.6) }}>Choose how you’ll use Vantage</p>
 
-                                <form className="mt-6 space-y-4" onSubmit={(e) => e.preventDefault()}>
-                                    <FieldShell label="Name" focused={focusedField === "name"}>
+                                <div className="mt-5 grid grid-cols-2 gap-2 rounded-xl border p-1" style={{ borderColor: themeColor("ink", 0.18), backgroundColor: themeColor("ink", 0.05) }}>
+                                    {[{ id: "user", label: "Customer" }, { id: "owner", label: "Store owner" }].map((option) => <button key={option.id} type="button" onClick={() => setSignupRole(option.id)} className="rounded-lg px-3 py-2 text-sm font-bold transition-colors" style={{ backgroundColor: signupRole === option.id ? themeColor("ink", 1) : "transparent", color: signupRole === option.id ? themeColor("bg", 1) : themeColor("ink", 0.65) }}>{option.label}</button>)}
+                                </div>
+
+                                <form className="mt-6 space-y-4" onSubmit={handleSignup} noValidate>
+                                    <FieldShell label="Name" focused={focusedField === "name"} error={signupErrors.name}>
                                         <User size={16} style={{ color: themeColor("ink", 0.5) }} />
                                         <input
                                             type="text"
@@ -312,13 +433,14 @@ export default function ShopRatingLogin() {
                                             onChange={(e) => setSignupName(e.target.value)}
                                             onFocus={() => setFocusedField("name")}
                                             onBlur={() => setFocusedField(null)}
-                                            placeholder="Jordan Lee"
+                                            placeholder="Rohan Kulkarni"
+                                            maxLength={60}
                                             style={inputStyle}
                                             className="w-full bg-transparent text-sm font-medium focus:outline-none"
                                         />
                                     </FieldShell>
 
-                                    <FieldShell label="Email" focused={focusedField === "signupEmail"}>
+                                    <FieldShell label="Email" focused={focusedField === "signupEmail"} error={signupErrors.email}>
                                         <Mail size={16} style={{ color: themeColor("ink", 0.5) }} />
                                         <input
                                             type="email"
@@ -326,13 +448,13 @@ export default function ShopRatingLogin() {
                                             onChange={(e) => setSignupEmail(e.target.value)}
                                             onFocus={() => setFocusedField("signupEmail")}
                                             onBlur={() => setFocusedField(null)}
-                                            placeholder="you@example.com"
+                                            placeholder="rohan.kulkarni88@gmail.com"
                                             style={inputStyle}
                                             className="w-full bg-transparent text-sm font-medium focus:outline-none"
                                         />
                                     </FieldShell>
 
-                                    <FieldShell label="Address" focused={focusedField === "address"}>
+                                    <FieldShell label="Address" focused={focusedField === "address"} error={signupErrors.address}>
                                         <MapPin size={16} style={{ color: themeColor("ink", 0.5) }} />
                                         <input
                                             type="text"
@@ -340,13 +462,14 @@ export default function ShopRatingLogin() {
                                             onChange={(e) => setSignupAddress(e.target.value)}
                                             onFocus={() => setFocusedField("address")}
                                             onBlur={() => setFocusedField(null)}
-                                            placeholder="221B Baker Street, London"
+                                            placeholder="14 Hazelwood Lane, Pune"
+                                            maxLength={400}
                                             style={inputStyle}
                                             className="w-full bg-transparent text-sm font-medium focus:outline-none"
                                         />
                                     </FieldShell>
 
-                                    <FieldShell label="Password" focused={focusedField === "signupPassword"}>
+                                    <FieldShell label="Password" focused={focusedField === "signupPassword"} error={signupErrors.password}>
                                         <Lock size={16} style={{ color: themeColor("ink", 0.5) }} />
                                         <input
                                             type={showSignupPassword ? "text" : "password"}
@@ -355,6 +478,7 @@ export default function ShopRatingLogin() {
                                             onFocus={() => setFocusedField("signupPassword")}
                                             onBlur={() => setFocusedField(null)}
                                             placeholder="••••••••"
+                                            maxLength={16}
                                             style={inputStyle}
                                             className="w-full bg-transparent text-sm font-medium focus:outline-none"
                                         />
@@ -368,7 +492,7 @@ export default function ShopRatingLogin() {
                                         className="btn-shimmer relative mt-2 flex w-full items-center justify-center gap-2 overflow-hidden rounded-lg py-3 text-sm font-bold transition-transform hover:scale-[1.015] active:scale-[0.98]"
                                         style={{ backgroundColor: themeColor("ink", 1), color: themeColor("bg", 1) }}
                                     >
-                                        <span className="relative z-10">Create account</span>
+                                        <span className="relative z-10">{loading ? "Creating account..." : "Create account"}</span>
                                         <ArrowRight size={15} className="relative z-10" />
                                     </button>
                                 </form>
@@ -384,6 +508,8 @@ export default function ShopRatingLogin() {
                     </div>
                 </div>
             </div>
+            <LoadingOverlay visible={loading} label={mode === "login" ? "Signing in…" : "Creating account…"} />
+            <Toast notice={notice} onDismiss={() => setNotice(null)} />
         </div>
     );
 }

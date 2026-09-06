@@ -33,7 +33,7 @@ function Field({ icon: Icon, label, value, editing, draft, onChange }) {
     );
 }
 
-export function Profile({ user = CURRENT_USER, onSave = () => { } }) {
+export function Profile({ user = { name: "", email: "", address: "", role: "" }, onSave = () => { } }) {
     const [editing, setEditing] = useState(false);
     const [draft, setDraft] = useState({
         name: user.name,

@@ -128,21 +128,28 @@ function EmptyRatings() {
     );
 }
 
-export function OwnerDashboard({ storeName = "Your store", ratings = seedRatings() }) {
+export function OwnerDashboard({ storeName = "Your store", ratings = [] }) {
+    const normalizedRatings = ratings.map((rating) => ({
+        ...rating,
+        id: rating.id || `${rating.storeId}-${rating.userId}`,
+        userName: rating.userName || "Customer",
+        userEmail: rating.userEmail || "",
+        submittedAt: rating.submittedAt || new Date().toISOString(),
+    }));
     const stats = useMemo(() => {
-        const total = ratings.length;
-        const sum = ratings.reduce((acc, r) => acc + r.rating, 0);
+        const total = normalizedRatings.length;
+        const sum = normalizedRatings.reduce((acc, r) => acc + r.rating, 0);
         const average = total ? sum / total : 0;
         const distribution = [5, 4, 3, 2, 1].map((star) => ({
             star,
-            count: ratings.filter((r) => r.rating === star).length,
+            count: normalizedRatings.filter((r) => r.rating === star).length,
         }));
         return { total, average, distribution };
-    }, [ratings]);
+    }, [normalizedRatings]);
 
     const sortedRatings = useMemo(
-        () => [...ratings].sort((a, b) => new Date(b.submittedAt) - new Date(a.submittedAt)),
-        [ratings]
+        () => [...normalizedRatings].sort((a, b) => new Date(b.submittedAt) - new Date(a.submittedAt)),
+        [normalizedRatings]
     );
 
     return (

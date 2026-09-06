@@ -1,4 +1,3 @@
-import React from "react";
 import {
     LayoutDashboard,
     Store,
@@ -39,9 +38,9 @@ export function Sidebar({
     mobileOpen = false,
     setMobileOpen = () => { },
     onLogout = () => console.log("logout"),
-    isAdmin = true,
+    user,
 }) {
-    const person = ROLE_META[role];
+    const person = user ? { name: user.name, label: role === "user" ? "Normal user" : role === "owner" ? "Store owner" : "Admin" } : ROLE_META[role];
 
     return (
         <>
@@ -52,7 +51,7 @@ export function Sidebar({
                 />
             )}
 
-            <aside className="vg-sidebar font-body sticky top-0 flex h-screen w-[260px] min-w-[260px] flex-col bg-[#121213] px-3.5 py-5 text-[#f5f3ef] box-border border-r border-white/10">
+            <aside className={`vg-sidebar font-body fixed inset-y-0 left-0 z-40 flex h-screen w-[260px] flex-col border-r border-white/10 bg-[#121213] px-3.5 py-5 text-[#f5f3ef] transition-transform duration-200 md:sticky md:top-0 md:z-auto md:translate-x-0 ${mobileOpen ? "translate-x-0" : "-translate-x-full"}`}>
                 {/* Logo */}
                 <div className="flex items-center gap-2.5 px-2 pb-5 pt-1">
                     <div className="font-display flex h-[34px] w-[34px] shrink-0 items-center justify-center rounded-[9px] bg-[#e8a33d] text-[17px] font-bold text-[#1a1408]">

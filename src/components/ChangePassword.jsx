@@ -9,22 +9,16 @@ import {
     AlertCircle,
     ArrowRight,
 } from "lucide-react";
+import { authApi } from "../api";
 
 /* ------------------------------------------------------------------ */
 /* MOCK DATA (replace with real API later)                             */
 /* ------------------------------------------------------------------ */
-const REGISTERED_EMAILS = [
-    "aarav.s@example.com",
-    "priya.p@example.com",
-    "rohan.m@example.com",
-    "admin@platform.com",
-];
 
 // Demo OTP – in real app this would come from email
-const VALID_OTP = "123456";
 
-export function ChangePassword() {
-    const [email, setEmail] = useState("");
+export function ChangePassword({ initialEmail = "" }) {
+    const [email, setEmail] = useState(initialEmail);
     const [otp, setOtp] = useState("");
     const [newPassword, setNewPassword] = useState("");
     const [confirmPassword, setConfirmPassword] = useState("");
@@ -35,26 +29,23 @@ export function ChangePassword() {
     const [errors, setErrors] = useState({});
     const [loading, setLoading] = useState(false);
     const [success, setSuccess] = useState(false);
+    const [message, setMessage] = useState("");
 
     const validate = () => {
         const next = {};
 
         if (!email.trim()) {
             next.email = "Email is required";
-        } else if (!REGISTERED_EMAILS.includes(email.trim().toLowerCase())) {
-            next.email = "This email is not registered with us";
         }
 
         if (!otp.trim()) {
             next.otp = "OTP is required";
-        } else if (otp.trim() !== VALID_OTP) {
-            next.otp = "Invalid OTP. Please check your email";
         }
 
         if (!newPassword) {
             next.newPassword = "New password is required";
-        } else if (newPassword.length < 8) {
-            next.newPassword = "Password must be at least 8 characters";
+        } else if (newPassword.length < 6) {
+            next.newPassword = "Password must be at least 6 characters";
         }
 
         if (!confirmPassword) {
@@ -67,17 +58,28 @@ export function ChangePassword() {
         return Object.keys(next).length === 0;
     };
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
         if (!validate()) return;
 
         setLoading(true);
 
-        // Simulate API call
-        setTimeout(() => {
+        try {
+            await authApi.resetPassword({ email: email.trim(), otp: otp.trim(), newPassword });
             setLoading(false);
             setSuccess(true);
-        }, 900);
+        } catch (err) {
+            setLoading(false);
+            setErrors({ form: err.message || "Could not update password" });
+        }
+    };
+
+    const handleSendOtp = async () => {
+        if (!email.trim()) { setErrors({ email: "Email is required" }); return; }
+        setLoading(true); setMessage("");
+        try { const result = await authApi.sendOtp({ email: email.trim() }); setMessage(result.message); }
+        catch (err) { setErrors({ email: err.message || "Could not send OTP" }); }
+        finally { setLoading(false); }
     };
 
     if (success) {
@@ -191,8 +193,8 @@ export function ChangePassword() {
                                 padding: "11px 14px",
                                 borderRadius: 10,
                                 border: `1px solid ${errors.email
-                                        ? "rgba(220, 38, 38, 0.5)"
-                                        : "rgba(26, 20, 8, 0.14)"
+                                    ? "rgba(220, 38, 38, 0.5)"
+                                    : "rgba(26, 20, 8, 0.14)"
                                     }`,
                                 background: "rgba(26, 20, 8, 0.025)",
                             }}
@@ -231,6 +233,10 @@ export function ChangePassword() {
                                 {errors.email}
                             </div>
                         )}
+                        <button type="button" onClick={handleSendOtp} disabled={loading} style={{ marginTop: 9, border: "none", background: "transparent", color: "#a56813", padding: 0, cursor: "pointer", fontWeight: 600 }}>
+                            {loading ? "Sending..." : "Send OTP"}
+                        </button>
+                        {message && <div style={{ marginTop: 7, fontSize: 12.5, color: "rgb(22, 163, 74)" }}>{message}</div>}
                     </div>
 
                     {/* OTP */}
@@ -254,8 +260,8 @@ export function ChangePassword() {
                                 padding: "11px 14px",
                                 borderRadius: 10,
                                 border: `1px solid ${errors.otp
-                                        ? "rgba(220, 38, 38, 0.5)"
-                                        : "rgba(26, 20, 8, 0.14)"
+                                    ? "rgba(220, 38, 38, 0.5)"
+                                    : "rgba(26, 20, 8, 0.14)"
                                     }`,
                                 background: "rgba(26, 20, 8, 0.025)",
                             }}
@@ -297,9 +303,6 @@ export function ChangePassword() {
                                 {errors.otp}
                             </div>
                         )}
-                        <div style={{ fontSize: 12, color: "rgba(26, 20, 8, 0.4)", marginTop: 6 }}>
-                            Demo OTP: <strong>123456</strong>
-                        </div>
                     </div>
 
                     {/* New Password */}
@@ -323,8 +326,8 @@ export function ChangePassword() {
                                 padding: "11px 14px",
                                 borderRadius: 10,
                                 border: `1px solid ${errors.newPassword
-                                        ? "rgba(220, 38, 38, 0.5)"
-                                        : "rgba(26, 20, 8, 0.14)"
+                                    ? "rgba(220, 38, 38, 0.5)"
+                                    : "rgba(26, 20, 8, 0.14)"
                                     }`,
                                 background: "rgba(26, 20, 8, 0.025)",
                             }}
@@ -401,8 +404,8 @@ export function ChangePassword() {
                                 padding: "11px 14px",
                                 borderRadius: 10,
                                 border: `1px solid ${errors.confirmPassword
-                                        ? "rgba(220, 38, 38, 0.5)"
-                                        : "rgba(26, 20, 8, 0.14)"
+                                    ? "rgba(220, 38, 38, 0.5)"
+                                    : "rgba(26, 20, 8, 0.14)"
                                     }`,
                                 background: "rgba(26, 20, 8, 0.025)",
                             }}
@@ -458,6 +461,7 @@ export function ChangePassword() {
                         )}
                     </div>
 
+                    {errors.form && <div style={{ fontSize: 13, color: "rgb(220, 38, 38)" }}>{errors.form}</div>}
                     {/* Submit */}
                     <button
                         type="submit"

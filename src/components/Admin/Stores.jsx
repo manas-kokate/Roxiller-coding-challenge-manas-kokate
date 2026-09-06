@@ -192,13 +192,13 @@ function StoreDetailsModal({ store, onClose }) {
 
                 <div className="mb-5 flex items-center justify-between rounded-[10px] bg-[#1a1408]/5 px-3.5 py-3">
                     <div className="flex items-center gap-2.5">
-                        <StaticStars value={store.overallRating} size={16} />
+                        <StaticStars value={Number(store.overallRating ?? store.rating ?? 0)} size={16} />
                         <span className="text-base font-bold text-[#1a1408]">
-                            {store.overallRating.toFixed(1)}
+                            {Number(store.overallRating ?? store.rating ?? 0).toFixed(1)}
                         </span>
                     </div>
                     <span className="text-[13px] text-[#1a1408]/55">
-                        {store.ratingsCount} {store.ratingsCount === 1 ? "rating" : "ratings"}
+                        {store.ratingsCount ?? "No"} {store.ratingsCount === 1 ? "rating" : "ratings"}
                     </span>
                 </div>
 
@@ -227,12 +227,33 @@ function StoreDetailsModal({ store, onClose }) {
 /* ------------------------------------------------------------------ */
 /* MAIN COMPONENT                                                      */
 /* ------------------------------------------------------------------ */
+function AddStoreModal({ open, onClose, onCreate }) {
+    const [form, setForm] = useState({ name: "", email: "", address: "", owner_id: "" });
+    const [error, setError] = useState("");
+    if (!open) return null;
+    const submit = async (event) => {
+        event.preventDefault(); setError("");
+        if (!form.name.trim() || !form.email.trim()) { setError("Store name and email are required."); return; }
+        const saved = await onCreate({ name: form.name.trim(), email: form.email.trim(), address: form.address.trim(), owner_id: form.owner_id ? Number(form.owner_id) : undefined });
+        if (saved) { setForm({ name: "", email: "", address: "", owner_id: "" }); onClose(); }
+    };
+    return <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/45 p-4" onMouseDown={onClose}>
+        <form className="w-full max-w-md rounded-2xl bg-white p-5 shadow-2xl sm:p-7" onSubmit={submit} onMouseDown={(event) => event.stopPropagation()}>
+            <div className="mb-5 flex items-center justify-between gap-3"><div><h2 className="font-display text-xl font-bold">Add store</h2><p className="mt-1 text-sm text-[#1a1408]/55">Owner ID is optional and must refer to an owner account.</p></div><button type="button" onClick={onClose} className="rounded-lg p-2 hover:bg-[#1a1408]/5" aria-label="Close"><X size={18} /></button></div>
+            <div className="space-y-4">{[["name", "Store name", "GreenLeaf Organics", "text"], ["email", "Store email", "hello@example.com", "email"], ["address", "Address", "Mumbai", "text"], ["owner_id", "Owner user ID (optional)", "e.g. 12", "number"]].map(([key, label, placeholder, type]) => <label key={key} className="block text-sm font-semibold text-[#1a1408]/70">{label}<input required={key === "name" || key === "email"} type={type} min={key === "owner_id" ? 1 : undefined} value={form[key]} onChange={(event) => setForm((current) => ({ ...current, [key]: event.target.value }))} placeholder={placeholder} className="mt-1.5 box-border w-full rounded-lg border border-[#1a1408]/15 bg-[#1a1408]/[0.02] px-3 py-2.5 font-normal outline-none focus:border-[#a56813]" /></label>)}</div>
+            {error && <p className="mt-4 text-sm font-semibold text-red-700">{error}</p>}
+            <div className="mt-6 flex flex-col-reverse gap-2 sm:flex-row sm:justify-end"><button type="button" onClick={onClose} className="rounded-lg px-4 py-2.5 text-sm font-semibold hover:bg-[#1a1408]/5">Cancel</button><button type="submit" className="rounded-lg bg-[#e8a33d] px-4 py-2.5 text-sm font-bold text-[#1a1408]">Create store</button></div>
+        </form>
+    </div>;
+}
+
 const PAGE_SIZE = 6;
 
-export function Stores({ stores = defaultStores }) {
+export function Stores({ stores = [], onCreate = async () => false }) {
     const [query, setQuery] = useState("");
     const [page, setPage] = useState(1);
     const [selectedStore, setSelectedStore] = useState(null);
+    const [showAdd, setShowAdd] = useState(false);
 
     const filtered = useMemo(() => {
         const q = query.trim().toLowerCase();
@@ -265,7 +286,7 @@ export function Stores({ stores = defaultStores }) {
                     {stores.length === 1 ? "store" : "stores"}
                 </div>
 
-                <div className="flex min-w-[280px] flex-1 items-center justify-end gap-2.5">
+                <div className="flex w-full min-w-0 flex-1 flex-col items-stretch gap-2.5 sm:flex-row sm:items-center sm:justify-end">
                     <div className="flex w-full max-w-[280px] items-center gap-2 rounded-[9px] border border-[#1a1408]/10 bg-white px-3 py-2">
                         <Search size={15} className="shrink-0 text-[#1a1408]/45" />
                         <input
@@ -284,7 +305,7 @@ export function Stores({ stores = defaultStores }) {
                         )}
                     </div>
 
-                    <button className="inline-flex shrink-0 cursor-pointer items-center gap-1.5 whitespace-nowrap rounded-[9px] border-none bg-[#e8a33d] px-4 py-2.5 text-[13.5px] font-semibold text-[#1a1408] transition-opacity hover:opacity-90">
+                    <button onClick={() => setShowAdd(true)} className="inline-flex shrink-0 cursor-pointer items-center gap-1.5 whitespace-nowrap rounded-[9px] border-none bg-[#e8a33d] px-4 py-2.5 text-[13.5px] font-semibold text-[#1a1408] transition-opacity hover:opacity-90">
                         <Plus size={15} strokeWidth={2.2} />
                         Add Store
                     </button>
@@ -352,9 +373,9 @@ export function Stores({ stores = defaultStores }) {
                                         </td>
                                         <td className="px-[18px] py-3.5">
                                             <div className="inline-flex items-center gap-2">
-                                                <StaticStars value={store.overallRating} size={13} />
+                                                <StaticStars value={Number(store.overallRating ?? store.rating ?? 0)} size={13} />
                                                 <span className="font-semibold text-[#1a1408]">
-                                                    {store.overallRating.toFixed(1)}
+                                                {Number(store.overallRating ?? store.rating ?? 0).toFixed(1)}
                                                 </span>
                                             </div>
                                         </td>
@@ -409,6 +430,7 @@ export function Stores({ stores = defaultStores }) {
             </div>
 
             <StoreDetailsModal store={selectedStore} onClose={() => setSelectedStore(null)} />
+            <AddStoreModal open={showAdd} onClose={() => setShowAdd(false)} onCreate={onCreate} />
         </div>
     );
 }

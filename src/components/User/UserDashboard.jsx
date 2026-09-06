@@ -202,30 +202,10 @@ function EmptyState({ hasQuery }) {
     );
 }
 
-export function UserDashboard({ initialStores, onChange = () => { } }) {
-    const [stores, setStores] = useState(initialStores || seedStores());
+export function UserDashboard({ stores = [], onRate = async () => {} }) {
     const [query, setQuery] = useState("");
 
-    const handleRate = (storeId, value) => {
-        const next = stores.map((s) => {
-            if (s.id !== storeId) return s;
-
-            const hadRating = s.userRating != null;
-            const prevTotal = s.overallRating * s.ratingsCount;
-            const newCount = hadRating ? s.ratingsCount : s.ratingsCount + 1;
-            const newTotal = hadRating ? prevTotal - s.userRating + value : prevTotal + value;
-            const newAverage = newCount ? newTotal / newCount : value;
-
-            return {
-                ...s,
-                userRating: value,
-                ratingsCount: newCount,
-                overallRating: newAverage,
-            };
-        });
-        setStores(next);
-        onChange(next);
-    };
+    const handleRate = (storeId, value) => onRate(storeId, value);
 
     const filtered = useMemo(() => {
         const q = query.trim().toLowerCase();
@@ -276,7 +256,7 @@ export function UserDashboard({ initialStores, onChange = () => { } }) {
                     <EmptyState hasQuery={query.trim().length > 0} />
                 ) : (
                     filtered.map((store) => (
-                        <StoreRow key={store.id} store={store} onRate={handleRate} />
+                        <StoreRow key={store.id} store={{ ...store, overallRating: Number(store.overallRating || 0), userRating: store.userRating ?? store.userSubmittedRating, ratingsCount: store.ratingsCount || 0 }} onRate={handleRate} />
                     ))
                 )}
             </div>

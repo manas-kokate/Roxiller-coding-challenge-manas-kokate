@@ -1,4 +1,7 @@
-import React, { useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { Menu } from "lucide-react";
+import { api, authApi } from "../api";
 import { Sidebar } from "../components/Sidebar";
 import { Dashboard } from "../components/Admin/AdminDashboard";
 import { Stores } from "../components/Admin/Stores";
@@ -7,154 +10,65 @@ import { Profile } from "../components/Profile";
 import { OwnerDashboard } from "../components/Owner/OwnerDashboard";
 import { UserDashboard } from "../components/User/UserDashboard";
 import { ChangePassword } from "../components/ChangePassword";
+import { LoadingOverlay, Toast } from "../components/Feedback";
 
-const AdminLayout = () => {
-    const [role, setRole] = useState("owner");
+export default function DashboardLayout() {
+    const navigate = useNavigate();
+    const session = useMemo(() => JSON.parse(localStorage.getItem("session") || "null"), []);
     const [activeNav, setActiveNav] = useState("dashboard");
     const [mobileOpen, setMobileOpen] = useState(false);
+    const [data, setData] = useState({ stats: null, stores: [], users: [], owner: null });
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState("");
+    const [busy, setBusy] = useState(false);
+    const [notice, setNotice] = useState(() => {
+        const stored = sessionStorage.getItem("flashNotice");
+        sessionStorage.removeItem("flashNotice");
+        return stored ? JSON.parse(stored) : null;
+    });
+    const request = useCallback((path, options = {}) => api(path, { ...options, token: session?.token }), [session?.token]);
 
-    const ratings = [
-        {
-            id: "r1",
-            userName: "Priya Kalra",
-            userEmail: "priya.kalra@example.com",
-            rating: 5,
-            comment: "Great service, quick checkout.",
-            submittedAt: "2026-08-28",
-        },
-        {
-            id: "r2",
-            userName: "Marcus Ihejirika",
-            userEmail: "marcus.i@example.com",
-            rating: 4,
-            comment: "",
-            submittedAt: "2026-08-22",
-        },
-    ];
+    const load = useCallback(async () => {
+        if (!session) return;
+        setLoading(true); setError("");
+        try {
+            if (session.user.role === "admin") {
+                const [stats, stores, users] = await Promise.all([request("/admin/dashboard"), request("/admin/stores"), request("/admin/users")]);
+                setData({ stats, stores, users, owner: null });
+            } else if (session.user.role === "user") {
+                setData({ stats: null, users: [], owner: null, stores: await request("/user/stores") });
+            } else {
+                setData({ stats: null, users: [], stores: [], owner: await request("/owner/dashboard") });
+            }
+        } catch (err) {
+            if (err.status === 401 || err.status === 403) { localStorage.removeItem("session"); window.location.assign("/login"); return; }
+            setError(err.message || "Could not load dashboard data.");
+        } finally { setLoading(false); }
+    }, [navigate, request, session]);
 
-    const stores = [
-        {
-            id: "store-1",
-            name: "Whitfield Hardware",
-            email: "contact@whitfieldhardware.com",
-            ownerName: "Dana Whitfield",
-            image: "",
-            address: "214 Birchwood Lane, Austin, TX",
-            lat: 30.2672,
-            lng: -97.7431,
-            overallRating: 4.3,
-            ratingsCount: 4,
-            userRating: null,
-        },
-        {
-            id: "store-2",
-            name: "Kalra Grocers",
-            email: "hello@kalragrocers.com",
-            ownerName: "Priya Kalra",
-            image: "",
-            address: "88 Elm Street, Portland, OR",
-            lat: 45.5152,
-            lng: -122.6784,
-            overallRating: 4.7,
-            ratingsCount: 12,
-            userRating: 5,
-        },
-        {
-            id: "store-3",
-            name: "Ihejirika Electronics",
-            email: "support@ihejirikaelectronics.com",
-            ownerName: "Marcus Ihejirika",
-            image: "",
-            address: "5 Market Row, Chicago, IL",
-            lat: 41.8781,
-            lng: -87.6298,
-            overallRating: 3.6,
-            ratingsCount: 7,
-            userRating: null,
-        },
-        {
-            id: "store-4",
-            name: "Farrell's Bakery",
-            email: "orders@farrellsbakery.com",
-            ownerName: "Owen Farrell",
-            image: "",
-            address: "40 Willow Ave, Denver, CO",
-            lat: 39.7392,
-            lng: -104.9903,
-            overallRating: 4.9,
-            ratingsCount: 21,
-            userRating: 4,
-        },
-    ];
-
-    const handleLogout = () => {
-        console.log("Logout clicked – replace with real auth later");
+    useEffect(() => { queueMicrotask(load); }, [load]);
+    if (!session) return null;
+    const runAction = async (action, successMessage) => {
+        setBusy(true);
+        try { await action(); setNotice({ type: "success", message: successMessage }); return true; }
+        catch (err) { setNotice({ type: "error", message: err.message || "Request failed" }); return false; }
+        finally { setBusy(false); }
     };
+    const logout = async () => { try { await authApi.logout(); } catch { /* local cleanup is sufficient */ } sessionStorage.setItem("flashNotice", JSON.stringify({ type: "success", message: "You’ve been logged out." })); localStorage.removeItem("session"); window.location.assign("/login"); };
+    const submitRating = (storeId, rating) => runAction(async () => { await request(`/user/stores/${storeId}/ratings`, { method: "POST", body: { rating } }); await load(); }, "Rating saved.");
+    const addUser = (user) => runAction(async () => { await request("/admin/users", { method: "POST", body: user }); await load(); }, "User created.");
+    const addStore = (store) => runAction(async () => { await request("/admin/stores", { method: "POST", body: store }); await load(); }, "Store created.");
 
-    const renderContent = () => {
-        if (role === "admin") {
-            switch (activeNav) {
-                case "dashboard":
-                    return <Dashboard />;
-                case "stores":
-                    return <Stores stores={stores} />;
-                case "users":
-                    return <Users />;
-                default:
-                    return <Dashboard />;
-            }
-        }
+    let content;
+    if (loading) content = <div className="p-10 text-[#1a1408]/60">Loading…</div>;
+    else if (error) content = <div className="p-10 text-red-700">{error}</div>;
+    else if (session.user.role === "admin") content = activeNav === "stores" ? <Stores stores={data.stores} onCreate={addStore} /> : activeNav === "users" ? <Users initialUsers={data.users} onAdd={addUser} /> : <Dashboard stats={data.stats} />;
+    else if (session.user.role === "user") content = activeNav === "profile" ? <Profile user={session.user} /> : activeNav === "change-password" ? <ChangePassword initialEmail={session.user.email} /> : <UserDashboard stores={data.stores} onRate={submitRating} />;
+    else content = activeNav === "change-password" ? <ChangePassword initialEmail={session.user.email} /> : <OwnerDashboard storeName="Your stores" ratings={data.owner?.users || []} />;
 
-        if (role === "user") {
-            switch (activeNav) {
-                case "dashboard":
-                    return <UserDashboard onChange={(stores) => console.log("stores updated", stores)} />;
-                case "profile":
-                    return <Profile onSave={(updated) => console.log("save", updated)} />;
-                case "change-password":
-                    return <ChangePassword />;
-                default:
-                    return <UserDashboard />;
-            }
-        }
-
-        if (role === "owner") {
-            switch (activeNav) {
-                case "dashboard":
-                    return <OwnerDashboard storeName="Whitfield Hardware" ratings={ratings} />;
-                case "change-password":
-                    return <ChangePassword />;
-                default:
-                    return <OwnerDashboard storeName="Whitfield Hardware" ratings={ratings} />;
-            }
-        }
-
-        return (
-            <div className="p-10 text-[#1a1408]/60">
-                Content for role: <strong className="text-[#1a1408]">{role}</strong> / nav:{" "}
-                <strong className="text-[#1a1408]">{activeNav}</strong>
-            </div>
-        );
-    };
-
-    return (
-        <div className="flex min-h-screen bg-[#f7f5f0] text-[#1a1408]">
-            <Sidebar
-                role={role}
-                setRole={setRole}
-                activeNav={activeNav}
-                setActiveNav={setActiveNav}
-                mobileOpen={mobileOpen}
-                setMobileOpen={setMobileOpen}
-                onLogout={handleLogout}
-                isAdmin={true}
-            />
-
-            <main className="min-h-screen flex-1 overflow-auto bg-[#f7f5f0]">
-                {renderContent()}
-            </main>
-        </div>
-    );
-};
-
-export default AdminLayout;
+    return <div className="flex min-h-screen bg-[#f7f5f0] text-[#1a1408]">
+        <Sidebar role={session.user.role} activeNav={activeNav} setActiveNav={setActiveNav} mobileOpen={mobileOpen} setMobileOpen={setMobileOpen} onLogout={logout} user={session.user} />
+        <main className="min-h-screen min-w-0 flex-1 overflow-auto bg-[#f7f5f0]"><button type="button" onClick={() => setMobileOpen(true)} className="fixed left-4 top-4 z-30 rounded-lg bg-[#121213] p-2 text-white shadow-lg md:hidden" aria-label="Open navigation"><Menu size={20} /></button>{content}</main>
+        <LoadingOverlay visible={busy} /><Toast notice={notice} onDismiss={() => setNotice(null)} />
+    </div>;
+}

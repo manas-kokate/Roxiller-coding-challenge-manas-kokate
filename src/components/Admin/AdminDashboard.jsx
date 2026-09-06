@@ -13,11 +13,7 @@ import {
 /* ------------------------------------------------------------------ */
 /* DUMMY DATA                                                          */
 /* ------------------------------------------------------------------ */
-const STATS = {
-    totalUsers: 48,
-    totalStores: 17,
-    totalRatings: 312,
-};
+const STATS = { totalUsers: 0, totalStores: 0, totalRatings: 0 };
 
 const TRENDS = {
     totalUsers: { value: "+12%", positive: true },
@@ -25,39 +21,29 @@ const TRENDS = {
     totalRatings: { value: "+28%", positive: true },
 };
 
-const RECENT_STORES = [
-    { id: 1, name: "GreenLeaf Organics", owner: "Aarav Sharma", location: "Mumbai", added: "3h ago", rating: 4.6 },
-    { id: 2, name: "TechHub Electronics", owner: "Vikram Singh", location: "Bengaluru", added: "8h ago", rating: 4.2 },
-    { id: 3, name: "Spice Route Kitchen", owner: "Neha Reddy", location: "Hyderabad", added: "1d ago", rating: 4.8 },
-    { id: 4, name: "Urban Threads", owner: "Karan Joshi", location: "Delhi", added: "2d ago", rating: 4.1 },
-];
+const RECENT_STORES = [];
 
-const RECENT_RATINGS = [
-    { id: 1, user: "Priya Patel", store: "GreenLeaf Organics", rating: 5, comment: "Fresh produce and friendly staff!", time: "1h ago" },
-    { id: 2, user: "Rohan Mehta", store: "TechHub Electronics", rating: 4, comment: "Good prices, quick service.", time: "4h ago" },
-    { id: 3, user: "Sneha Gupta", store: "Spice Route Kitchen", rating: 5, comment: "Best biryani in the city!", time: "9h ago" },
-    { id: 4, user: "Aarav Sharma", store: "Urban Threads", rating: 3, comment: "Decent quality, limited sizes.", time: "1d ago" },
-];
+const RECENT_RATINGS = [];
 
-export function Dashboard() {
+export function Dashboard({ stats = STATS }) {
     const cards = [
         {
             label: "Total Users",
-            value: STATS.totalUsers,
+            value: stats.totalUsers,
             icon: Users,
             hint: "Admins + Normal users + Store owners",
             trend: TRENDS.totalUsers,
         },
         {
             label: "Total Stores",
-            value: STATS.totalStores,
+            value: stats.totalStores,
             icon: Store,
             hint: "All registered stores",
             trend: TRENDS.totalStores,
         },
         {
             label: "Total Ratings",
-            value: STATS.totalRatings,
+            value: stats.totalRatings,
             icon: Star,
             hint: "Submitted by users",
             trend: TRENDS.totalRatings,
@@ -66,7 +52,7 @@ export function Dashboard() {
 
     return (
         <div className="max-w-screen bg-[#f7f5f0] px-6 py-8 text-[#1a1408] sm:px-9">
-            {/* Header + Quick Actions */}
+            {/* Header */}
             <div className="mb-8 flex flex-wrap items-end justify-between gap-5">
                 <div>
                     <h1 className="font-display m-0 text-[28px] font-bold tracking-tight text-[#1a1408]">
@@ -77,16 +63,6 @@ export function Dashboard() {
                     </p>
                 </div>
 
-                <div className="flex flex-wrap gap-2.5">
-                    <button className="inline-flex cursor-pointer items-center gap-2 rounded-[10px] border border-[#1a1408]/10 bg-white px-4 py-2.5 text-[13.5px] font-semibold text-[#1a1408] transition-colors hover:bg-[#1a1408]/5">
-                        <UserPlus size={16} strokeWidth={2} />
-                        Add User
-                    </button>
-                    <button className="inline-flex cursor-pointer items-center gap-2 rounded-[10px] border-none bg-[#e8a33d] px-4 py-2.5 text-[13.5px] font-semibold text-[#1a1408] transition-opacity hover:opacity-90">
-                        <Plus size={16} strokeWidth={2.2} />
-                        Add Store
-                    </button>
-                </div>
             </div>
 
             {/* Stats Grid */}

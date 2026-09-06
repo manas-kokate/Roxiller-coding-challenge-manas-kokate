@@ -1,8 +1,11 @@
-import React, { useState } from "react";
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { Sun, Moon } from "lucide-react";
 
 export default function Home() {
     const [isDark, setIsDark] = useState(true);
+    const navigate = useNavigate();
+    const goToLogin = () => navigate("/login");
 
     const theme = {
         bg: isDark ? "#121213" : "#f7f5f0",
@@ -77,21 +80,23 @@ export default function Home() {
                             {isDark ? <Sun size={16} /> : <Moon size={16} />}
                         </button>
 
-                        <a
-                            href="#"
+                        <button
+                            type="button"
+                            onClick={goToLogin}
                             className="hidden md:inline font-semibold text-sm transition-colors"
                             style={{ color: theme.muted }}
                             onMouseEnter={(e) => (e.currentTarget.style.color = theme.text)}
                             onMouseLeave={(e) => (e.currentTarget.style.color = theme.muted)}
                         >
                             Log in
-                        </a>
-                        <a
-                            href="#"
+                        </button>
+                        <button
+                            type="button"
+                            onClick={goToLogin}
                             className="hidden md:inline text-sm font-bold px-5 py-2.5 rounded-[9px] bg-[#e8a33d] text-[#1a1408]"
                         >
                             Get started
-                        </a>
+                        </button>
                     </div>
                 </nav>
             </div>
@@ -112,15 +117,17 @@ export default function Home() {
                         </p>
 
                         <div className="flex flex-wrap items-center gap-3 sm:gap-5 mb-8 sm:mb-12 font-body">
-                            <a
-                                href="#"
+                            <button
+                                type="button"
+                                onClick={goToLogin}
                                 className="text-sm font-bold px-4 sm:px-5 py-2.5 rounded-[9px] bg-[#e8a33d] text-[#1a1408]"
                             >
                                 Get started
-                            </a>
+                            </button>
 
-                            <a
-                                href="#"
+                            <button
+                                type="button"
+                                onClick={goToLogin}
                                 className="md:hidden font-semibold text-sm px-4 py-2.5 rounded-[9px] border transition-colors"
                                 style={{
                                     color: theme.text,
@@ -128,7 +135,7 @@ export default function Home() {
                                 }}
                             >
                                 Log in
-                            </a>
+                            </button>
                             <a
                                 href="#visual"
                                 className="hidden md:inline font-semibold text-sm transition-colors"
