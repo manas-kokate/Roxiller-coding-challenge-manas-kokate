@@ -39,13 +39,13 @@ const seedStores = () => [
 
 function StaticStars({ value, size = 15 }) {
     return (
-        <div style={{ display: "flex", gap: 2 }}>
+        <div className="flex gap-0.5">
             {[1, 2, 3, 4, 5].map((n) => (
                 <Star
                     key={n}
                     size={size}
-                    fill={n <= Math.round(value) ? "#E8A33D" : "none"}
-                    style={{ color: "#E8A33D" }}
+                    fill={n <= Math.round(value) ? "#e8a33d" : "none"}
+                    className="text-[#e8a33d]"
                 />
             ))}
         </div>
@@ -57,8 +57,8 @@ function StarPicker({ initialValue, onSubmit, onCancel }) {
     const [hover, setHover] = useState(0);
 
     return (
-        <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-            <div style={{ display: "flex", gap: 3 }}>
+        <div className="flex items-center gap-2.5">
+            <div className="flex gap-0.5">
                 {[1, 2, 3, 4, 5].map((n) => {
                     const filled = n <= (hover || value);
                     return (
@@ -67,18 +67,12 @@ function StarPicker({ initialValue, onSubmit, onCancel }) {
                             onClick={() => setValue(n)}
                             onMouseEnter={() => setHover(n)}
                             onMouseLeave={() => setHover(0)}
-                            style={{
-                                border: "none",
-                                background: "transparent",
-                                cursor: "pointer",
-                                padding: 2,
-                                lineHeight: 0,
-                            }}
+                            className="cursor-pointer border-none bg-transparent p-0.5 leading-none"
                         >
                             <Star
                                 size={19}
-                                fill={filled ? "#E8A33D" : "none"}
-                                style={{ color: "#E8A33D" }}
+                                fill={filled ? "#e8a33d" : "none"}
+                                className="text-[#e8a33d]"
                             />
                         </button>
                     );
@@ -88,39 +82,15 @@ function StarPicker({ initialValue, onSubmit, onCancel }) {
                 onClick={() => value > 0 && onSubmit(value)}
                 disabled={value === 0}
                 title="Save rating"
-                style={{
-                    width: 28,
-                    height: 28,
-                    borderRadius: 7,
-                    border: "none",
-                    background: "rgb(var(--color-ink))",
-                    color: "rgb(var(--color-bg))",
-                    cursor: value === 0 ? "default" : "pointer",
-                    opacity: value === 0 ? 0.4 : 1,
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    flexShrink: 0,
-                }}
+                className={`flex h-7 w-7 shrink-0 items-center justify-center rounded-md border-none bg-[#e8a33d] text-[#1a1408] ${value === 0 ? "cursor-default opacity-40" : "cursor-pointer"
+                    }`}
             >
                 <Check size={14} />
             </button>
             <button
                 onClick={onCancel}
                 title="Cancel"
-                style={{
-                    width: 28,
-                    height: 28,
-                    borderRadius: 7,
-                    border: "1px solid rgb(var(--color-ink) / 0.15)",
-                    background: "transparent",
-                    color: "rgb(var(--color-ink))",
-                    cursor: "pointer",
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    flexShrink: 0,
-                }}
+                className="flex h-7 w-7 shrink-0 cursor-pointer items-center justify-center rounded-md border border-[#1a1408]/15 bg-transparent text-[#1a1408]"
             >
                 <X size={14} />
             </button>
@@ -144,89 +114,42 @@ function StoreRow({ store, onRate }) {
     };
 
     return (
-        <div
-            style={{
-                display: "grid",
-                gridTemplateColumns: "minmax(220px, 2fr) minmax(140px, 1fr) minmax(180px, 1.2fr)",
-                gap: 20,
-                alignItems: "center",
-                padding: "18px 20px",
-                borderBottom: "1px solid rgb(var(--color-ink) / 0.08)",
-            }}
-        >
+        <div className="grid grid-cols-1 items-center gap-5 border-b border-[#1a1408]/10 px-5 py-[18px] md:grid-cols-[minmax(220px,2fr)_minmax(140px,1fr)_minmax(180px,1.2fr)]">
             {/* Store Name + Address */}
-            <div style={{ display: "flex", alignItems: "center", gap: 14, minWidth: 0 }}>
-                <div
-                    style={{
-                        width: 42,
-                        height: 42,
-                        borderRadius: 11,
-                        background: "rgb(var(--color-ink) / 0.07)",
-                        display: "flex",
-                        alignItems: "center",
-                        justifyContent: "center",
-                        fontSize: 13.5,
-                        fontWeight: 700,
-                        flexShrink: 0,
-                    }}
-                >
+            <div className="flex min-w-0 items-center gap-3.5">
+                <div className="flex h-[42px] w-[42px] shrink-0 items-center justify-center rounded-[11px] bg-[#1a1408]/10 text-[13.5px] font-bold text-[#1a1408]">
                     {initials}
                 </div>
-                <div style={{ minWidth: 0 }}>
-                    <div
-                        style={{
-                            fontSize: 14.5,
-                            fontWeight: 700,
-                            whiteSpace: "nowrap",
-                            overflow: "hidden",
-                            textOverflow: "ellipsis",
-                        }}
-                    >
+                <div className="min-w-0">
+                    <div className="truncate text-[14.5px] font-bold text-[#1a1408]">
                         {store.name}
                     </div>
-                    <div
-                        style={{
-                            display: "flex",
-                            alignItems: "center",
-                            gap: 5,
-                            fontSize: 12.5,
-                            opacity: 0.5,
-                            marginTop: 3,
-                        }}
-                    >
-                        <MapPin size={12} style={{ flexShrink: 0 }} />
-                        <span
-                            style={{
-                                overflow: "hidden",
-                                textOverflow: "ellipsis",
-                                whiteSpace: "nowrap",
-                            }}
-                        >
-                            {store.address}
-                        </span>
+                    <div className="mt-0.5 flex items-center gap-1.5 text-[12.5px] text-[#1a1408]/50">
+                        <MapPin size={12} className="shrink-0" />
+                        <span className="truncate">{store.address}</span>
                     </div>
                 </div>
             </div>
 
             {/* Overall Rating */}
             <div>
-                <div style={{ fontSize: 11, opacity: 0.45, marginBottom: 5, fontWeight: 500 }}>
+                <div className="mb-1 text-[11px] font-medium text-[#1a1408]/45">
                     Overall rating
                 </div>
-                <div style={{ display: "flex", alignItems: "center", gap: 7 }}>
+                <div className="flex items-center gap-1.5">
                     <StaticStars value={store.overallRating} size={14} />
-                    <span style={{ fontSize: 13.5, fontWeight: 700 }}>
+                    <span className="text-[13.5px] font-bold text-[#1a1408]">
                         {store.overallRating.toFixed(1)}
                     </span>
                 </div>
-                <div style={{ fontSize: 11.5, opacity: 0.45, marginTop: 3 }}>
+                <div className="mt-0.5 text-[11.5px] text-[#1a1408]/45">
                     {store.ratingsCount} {store.ratingsCount === 1 ? "rating" : "ratings"}
                 </div>
             </div>
 
             {/* User's Rating / Actions */}
             <div>
-                <div style={{ fontSize: 11, opacity: 0.45, marginBottom: 5, fontWeight: 500 }}>
+                <div className="mb-1 text-[11px] font-medium text-[#1a1408]/45">
                     Your rating
                 </div>
 
@@ -237,22 +160,11 @@ function StoreRow({ store, onRate }) {
                         onCancel={() => setPicking(false)}
                     />
                 ) : store.userRating ? (
-                    <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
+                    <div className="flex items-center gap-3">
                         <StaticStars value={store.userRating} size={14} />
                         <button
                             onClick={() => setPicking(true)}
-                            style={{
-                                display: "inline-flex",
-                                alignItems: "center",
-                                gap: 5,
-                                border: "none",
-                                background: "transparent",
-                                color: "rgb(var(--color-ink) / 0.6)",
-                                fontSize: 12.5,
-                                fontWeight: 600,
-                                cursor: "pointer",
-                                padding: 0,
-                            }}
+                            className="inline-flex cursor-pointer items-center gap-1 border-none bg-transparent p-0 text-[12.5px] font-semibold text-[#1a1408]/60 hover:text-[#1a1408]"
                         >
                             <Pencil size={12.5} />
                             Modify
@@ -261,19 +173,7 @@ function StoreRow({ store, onRate }) {
                 ) : (
                     <button
                         onClick={() => setPicking(true)}
-                        style={{
-                            display: "inline-flex",
-                            alignItems: "center",
-                            gap: 7,
-                            padding: "7px 13px",
-                            borderRadius: 8,
-                            border: "1px solid rgb(var(--color-ink) / 0.14)",
-                            background: "transparent",
-                            color: "rgb(var(--color-ink))",
-                            fontSize: 12.5,
-                            fontWeight: 600,
-                            cursor: "pointer",
-                        }}
+                        className="inline-flex cursor-pointer items-center gap-1.5 rounded-lg border border-[#1a1408]/15 bg-transparent px-3 py-1.5 text-[12.5px] font-semibold text-[#1a1408] transition-colors hover:bg-[#1a1408]/5"
                     >
                         <Star size={13} />
                         Submit Rating
@@ -286,34 +186,14 @@ function StoreRow({ store, onRate }) {
 
 function EmptyState({ hasQuery }) {
     return (
-        <div
-            style={{
-                display: "flex",
-                flexDirection: "column",
-                alignItems: "center",
-                justifyContent: "center",
-                textAlign: "center",
-                padding: "64px 24px",
-            }}
-        >
-            <div
-                style={{
-                    width: 52,
-                    height: 52,
-                    borderRadius: 14,
-                    background: "rgb(var(--color-ink) / 0.06)",
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    marginBottom: 16,
-                }}
-            >
-                <StoreIcon size={22} style={{ opacity: 0.4 }} />
+        <div className="flex flex-col items-center justify-center px-6 py-16 text-center">
+            <div className="mb-4 flex h-[52px] w-[52px] items-center justify-center rounded-[14px] bg-[#1a1408]/5">
+                <StoreIcon size={22} className="text-[#1a1408]/40" />
             </div>
-            <div className="font-display" style={{ fontSize: 15.5, fontWeight: 700 }}>
+            <div className="font-display text-[15.5px] font-bold text-[#1a1408]">
                 {hasQuery ? "No stores match your search" : "No stores registered yet"}
             </div>
-            <div style={{ fontSize: 13, opacity: 0.5, marginTop: 5, maxWidth: 280 }}>
+            <div className="mt-1.5 max-w-[280px] text-[13px] text-[#1a1408]/50">
                 {hasQuery
                     ? "Try a different name or address."
                     : "Once stores are added, they'll show up here for you to rate."}
@@ -358,79 +238,31 @@ export function UserDashboard({ initialStores, onChange = () => { } }) {
     }, [stores, query]);
 
     return (
-        <div
-            className="font-body"
-            style={{
-                width: "100%",
-                minHeight: "100vh",
-                boxSizing: "border-box",
-                color: "rgb(var(--color-ink))",
-                background: "rgb(var(--color-bg))",
-                padding: "36px 40px",
-            }}
-        >
+        <div className="font-body box-border min-h-screen w-full bg-[#f7f5f0] px-6 py-9 text-[#1a1408] sm:px-10">
             {/* Header */}
-            <div style={{ marginBottom: 8 }}>
-                <div className="font-display" style={{ fontSize: 26, fontWeight: 700 }}>
-                    Stores
-                </div>
+            <div className="mb-2">
+                <div className="font-display text-[26px] font-bold text-[#1a1408]">Stores</div>
             </div>
 
             {/* Toolbar: count + search */}
-            <div
-                style={{
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "space-between",
-                    gap: 16,
-                    marginBottom: 22,
-                    flexWrap: "wrap",
-                }}
-            >
-                <div style={{ fontSize: 13.5, opacity: 0.55 }}>
+            <div className="mb-5 flex flex-wrap items-center justify-between gap-4">
+                <div className="text-[13.5px] text-[#1a1408]/55">
                     {filtered.length} of {stores.length} registered{" "}
                     {stores.length === 1 ? "store" : "stores"}
                 </div>
 
-                <div
-                    style={{
-                        display: "flex",
-                        alignItems: "center",
-                        gap: 8,
-                        padding: "8px 12px",
-                        borderRadius: 9,
-                        border: "1px solid rgb(var(--color-ink) / 0.12)",
-                        background: "rgb(var(--color-ink) / 0.03)",
-                        width: "100%",
-                        maxWidth: 300,
-                    }}
-                >
-                    <Search size={15} style={{ opacity: 0.45, flexShrink: 0 }} />
+                <div className="flex w-full max-w-[300px] items-center gap-2 rounded-[9px] border border-[#1a1408]/10 bg-white px-3 py-2">
+                    <Search size={15} className="shrink-0 text-[#1a1408]/45" />
                     <input
                         value={query}
                         onChange={(e) => setQuery(e.target.value)}
                         placeholder="Search by name or address"
-                        style={{
-                            flex: 1,
-                            border: "none",
-                            background: "transparent",
-                            outline: "none",
-                            fontSize: 13,
-                            color: "rgb(var(--color-ink))",
-                            minWidth: 0,
-                        }}
+                        className="min-w-0 flex-1 border-none bg-transparent text-[13px] text-[#1a1408] outline-none placeholder:text-[#1a1408]/40"
                     />
                     {query && (
                         <button
                             onClick={() => setQuery("")}
-                            style={{
-                                border: "none",
-                                background: "transparent",
-                                cursor: "pointer",
-                                color: "rgb(var(--color-ink) / 0.45)",
-                                display: "flex",
-                                padding: 0,
-                            }}
+                            className="flex cursor-pointer border-none bg-transparent p-0 text-[#1a1408]/45"
                         >
                             <X size={14} />
                         </button>
@@ -439,14 +271,7 @@ export function UserDashboard({ initialStores, onChange = () => { } }) {
             </div>
 
             {/* Stores List */}
-            <div
-                style={{
-                    background: "rgb(var(--color-bg))",
-                    border: "1px solid rgb(var(--color-ink) / 0.1)",
-                    borderRadius: 14,
-                    overflow: "hidden",
-                }}
-            >
+            <div className="overflow-hidden rounded-[14px] border border-[#1a1408]/10 bg-white">
                 {filtered.length === 0 ? (
                     <EmptyState hasQuery={query.trim().length > 0} />
                 ) : (

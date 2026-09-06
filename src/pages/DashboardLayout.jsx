@@ -130,14 +130,15 @@ const AdminLayout = () => {
         }
 
         return (
-            <div style={{ padding: 40, opacity: 0.6 }}>
-                Content for role: <strong>{role}</strong> / nav: <strong>{activeNav}</strong>
+            <div className="p-10 text-[#1a1408]/60">
+                Content for role: <strong className="text-[#1a1408]">{role}</strong> / nav:{" "}
+                <strong className="text-[#1a1408]">{activeNav}</strong>
             </div>
         );
     };
 
     return (
-        <div style={{ display: "flex", minHeight: "100vh", background: "rgb(var(--color-bg))" }}>
+        <div className="flex min-h-screen bg-[#f7f5f0] text-[#1a1408]">
             <Sidebar
                 role={role}
                 setRole={setRole}
@@ -149,7 +150,7 @@ const AdminLayout = () => {
                 isAdmin={true}
             />
 
-            <main style={{ flex: 1, overflow: "auto", minHeight: "100vh" }}>
+            <main className="min-h-screen flex-1 overflow-auto bg-[#f7f5f0]">
                 {renderContent()}
             </main>
         </div>

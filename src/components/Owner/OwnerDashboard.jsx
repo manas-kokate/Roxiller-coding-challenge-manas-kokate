@@ -39,13 +39,13 @@ const seedRatings = () => [
 
 function StarRow({ value, size = 15 }) {
     return (
-        <div style={{ display: "flex", gap: 2 }}>
+        <div className="flex gap-0.5">
             {[1, 2, 3, 4, 5].map((n) => (
                 <Star
                     key={n}
                     size={size}
-                    fill={n <= Math.round(value) ? "#E8A33D" : "none"}
-                    style={{ color: "#E8A33D" }}
+                    fill={n <= Math.round(value) ? "#e8a33d" : "none"}
+                    className="text-[#e8a33d]"
                 />
             ))}
         </div>
@@ -55,28 +55,15 @@ function StarRow({ value, size = 15 }) {
 function DistributionBar({ star, count, total }) {
     const pct = total ? Math.round((count / total) * 100) : 0;
     return (
-        <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 7 }}>
-            <div style={{ fontSize: 12, width: 40, opacity: 0.6, flexShrink: 0 }}>{star} star</div>
-            <div
-                style={{
-                    flex: 1,
-                    height: 7,
-                    borderRadius: 5,
-                    background: "rgb(var(--color-ink) / 0.08)",
-                    overflow: "hidden",
-                }}
-            >
+        <div className="mb-1.5 flex items-center gap-2.5">
+            <div className="w-10 shrink-0 text-xs text-[#1a1408]/60">{star} star</div>
+            <div className="h-1.5 flex-1 overflow-hidden rounded-full bg-[#1a1408]/10">
                 <div
-                    style={{
-                        width: `${pct}%`,
-                        height: "100%",
-                        background: "#E8A33D",
-                        borderRadius: 5,
-                        transition: "width .3s ease",
-                    }}
+                    className="h-full rounded-full bg-[#e8a33d] transition-all duration-300"
+                    style={{ width: `${pct}%` }}
                 />
             </div>
-            <div style={{ fontSize: 12, width: 26, textAlign: "right", opacity: 0.55, flexShrink: 0 }}>
+            <div className="w-[26px] shrink-0 text-right text-xs text-[#1a1408]/55">
                 {count}
             </div>
         </div>
@@ -92,76 +79,31 @@ function RatingRow({ entry }) {
         .toUpperCase();
 
     return (
-        <div
-            style={{
-                display: "flex",
-                alignItems: "flex-start",
-                gap: 14,
-                padding: "16px 4px",
-                borderBottom: "1px solid rgb(var(--color-ink) / 0.1)",
-            }}
-        >
-            <div
-                style={{
-                    width: 40,
-                    height: 40,
-                    borderRadius: "50%",
-                    background: "rgb(var(--color-ink) / 0.08)",
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    fontSize: 13,
-                    fontWeight: 700,
-                    flexShrink: 0,
-                }}
-            >
+        <div className="flex items-start gap-3.5 border-b border-[#1a1408]/10 px-1 py-4">
+            <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-[#1a1408]/10 text-[13px] font-bold text-[#1a1408]">
                 {initials}
             </div>
 
-            <div style={{ flex: 1, minWidth: 0 }}>
-                <div
-                    style={{
-                        display: "flex",
-                        alignItems: "center",
-                        justifyContent: "space-between",
-                        gap: 10,
-                        flexWrap: "wrap",
-                    }}
-                >
-                    <div style={{ fontSize: 14.5, fontWeight: 700 }}>{entry.userName}</div>
+            <div className="min-w-0 flex-1">
+                <div className="flex flex-wrap items-center justify-between gap-2.5">
+                    <div className="text-[14.5px] font-bold text-[#1a1408]">{entry.userName}</div>
                     <StarRow value={entry.rating} />
                 </div>
 
-                <div
-                    style={{
-                        display: "flex",
-                        alignItems: "center",
-                        gap: 6,
-                        fontSize: 12.5,
-                        opacity: 0.55,
-                        marginTop: 4,
-                    }}
-                >
+                <div className="mt-1 flex items-center gap-1.5 text-[12.5px] text-[#1a1408]/55">
                     <Mail size={12.5} />
                     {entry.userEmail}
-                    <span style={{ opacity: 0.4 }}>·</span>
+                    <span className="text-[#1a1408]/40">·</span>
                     <Calendar size={12.5} />
                     {entry.submittedAt}
                 </div>
 
                 {entry.comment && (
-                    <div
-                        style={{
-                            display: "flex",
-                            alignItems: "flex-start",
-                            gap: 6,
-                            fontSize: 13.5,
-                            marginTop: 8,
-                            opacity: 0.85,
-                            lineHeight: 1.4,
-                        }}
-                    >
-                        <MessageSquareText size={14} style={{ marginTop: 2, opacity: 0.5, flexShrink: 0 }} />
+                    <div className="mt-2 flex items-start gap-1.5 text-[13.5px] leading-snug text-[#1a1408]/85">
+                        <MessageSquareText
+                            size={14}
+                            className="mt-0.5 shrink-0 text-[#1a1408]/50"
+                        />
                         {entry.comment}
                     </div>
                 )}
@@ -172,34 +114,14 @@ function RatingRow({ entry }) {
 
 function EmptyRatings() {
     return (
-        <div
-            style={{
-                display: "flex",
-                flexDirection: "column",
-                alignItems: "center",
-                justifyContent: "center",
-                textAlign: "center",
-                padding: "56px 24px",
-            }}
-        >
-            <div
-                style={{
-                    width: 52,
-                    height: 52,
-                    borderRadius: 14,
-                    background: "rgb(var(--color-ink) / 0.06)",
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    marginBottom: 16,
-                }}
-            >
-                <Star size={22} style={{ opacity: 0.45 }} />
+        <div className="flex flex-col items-center justify-center px-6 py-14 text-center">
+            <div className="mb-4 flex h-[52px] w-[52px] items-center justify-center rounded-[14px] bg-[#1a1408]/5">
+                <Star size={22} className="text-[#1a1408]/45" />
             </div>
-            <div className="font-display" style={{ fontSize: 15.5, fontWeight: 700 }}>
+            <div className="font-display text-[15.5px] font-bold text-[#1a1408]">
                 No ratings yet
             </div>
-            <div style={{ fontSize: 13, opacity: 0.55, marginTop: 5, maxWidth: 280 }}>
+            <div className="mt-1.5 max-w-[280px] text-[13px] text-[#1a1408]/55">
                 Once customers start rating your store, they'll show up here.
             </div>
         </div>
@@ -224,104 +146,51 @@ export function OwnerDashboard({ storeName = "Your store", ratings = seedRatings
     );
 
     return (
-        <div
-            className="font-body"
-            style={{
-                width: "100%",
-                minHeight: "100vh",
-                boxSizing: "border-box",
-                color: "rgb(var(--color-ink))",
-                background: "rgb(var(--color-bg))",
-                padding: "40px 48px",
-            }}
-        >
-            <div style={{ marginBottom: 28 }}>
-                <div className="font-display" style={{ fontSize: 24, fontWeight: 700 }}>
-                    Dashboard
-                </div>
-                <div style={{ fontSize: 13.5, opacity: 0.55, marginTop: 4 }}>
+        <div className="font-body box-border min-h-screen w-full bg-[#f7f5f0] px-6 py-10 text-[#1a1408] sm:px-12">
+            <div className="mb-7">
+                <div className="font-display text-2xl font-bold text-[#1a1408]">Dashboard</div>
+                <div className="mt-1 text-[13.5px] text-[#1a1408]/55">
                     Ratings overview for {storeName}
                 </div>
             </div>
 
-            <div
-                style={{
-                    display: "flex",
-                    gap: 20,
-                    alignItems: "flex-start",
-                    flexWrap: "wrap",
-                }}
-            >
+            <div className="flex flex-wrap items-start gap-5">
                 {/* Analytics card */}
-                <div
-                    style={{
-                        flex: "1 1 280px",
-                        maxWidth: 340,
-                        background: "rgb(var(--color-bg))",
-                        border: "1px solid rgb(var(--color-ink) / 0.12)",
-                        borderRadius: 14,
-                        padding: "24px 22px",
-                    }}
-                >
-                    <div
-                        style={{
-                            display: "flex",
-                            alignItems: "center",
-                            gap: 8,
-                            fontSize: 12.5,
-                            opacity: 0.55,
-                            marginBottom: 14,
-                        }}
-                    >
+                <div className="max-w-[340px] min-w-[280px] flex-1 rounded-[14px] border border-[#1a1408]/10 bg-white px-[22px] py-6">
+                    <div className="mb-3.5 flex items-center gap-2 text-[12.5px] text-[#1a1408]/55">
                         <UsersIcon size={14} /> Average rating
                     </div>
 
-                    <div style={{ display: "flex", alignItems: "baseline", gap: 10, marginBottom: 8 }}>
-                        <div className="font-display" style={{ fontSize: 40, fontWeight: 700, lineHeight: 1 }}>
+                    <div className="mb-2 flex items-baseline gap-2.5">
+                        <div className="font-display text-[40px] font-bold leading-none text-[#1a1408]">
                             {stats.average.toFixed(1)}
                         </div>
-                        <div style={{ fontSize: 13, opacity: 0.55 }}>/ 5</div>
+                        <div className="text-[13px] text-[#1a1408]/55">/ 5</div>
                     </div>
 
                     <StarRow value={stats.average} size={17} />
 
-                    <div style={{ fontSize: 12.5, opacity: 0.55, marginTop: 8 }}>
+                    <div className="mt-2 text-[12.5px] text-[#1a1408]/55">
                         Based on {stats.total} {stats.total === 1 ? "rating" : "ratings"}
                     </div>
 
-                    <div
-                        style={{
-                            marginTop: 20,
-                            paddingTop: 18,
-                            borderTop: "1px solid rgb(var(--color-ink) / 0.1)",
-                        }}
-                    >
+                    <div className="mt-5 border-t border-[#1a1408]/10 pt-[18px]">
                         {stats.distribution.map((d) => (
-                            <DistributionBar key={d.star} star={d.star} count={d.count} total={stats.total} />
+                            <DistributionBar
+                                key={d.star}
+                                star={d.star}
+                                count={d.count}
+                                total={stats.total}
+                            />
                         ))}
                     </div>
                 </div>
 
                 {/* Ratings list */}
-                <div
-                    style={{
-                        flex: "2 1 400px",
-                        background: "rgb(var(--color-bg))",
-                        border: "1px solid rgb(var(--color-ink) / 0.12)",
-                        borderRadius: 14,
-                        padding: "22px 24px",
-                    }}
-                >
-                    <div
-                        style={{
-                            display: "flex",
-                            alignItems: "center",
-                            justifyContent: "space-between",
-                            marginBottom: 4,
-                        }}
-                    >
-                        <div style={{ fontSize: 15, fontWeight: 700 }}>Customer ratings</div>
-                        <div style={{ fontSize: 12.5, opacity: 0.55 }}>{stats.total} total</div>
+                <div className="min-w-[280px] flex-[2_1_400px] rounded-[14px] border border-[#1a1408]/10 bg-white px-6 py-[22px]">
+                    <div className="mb-1 flex items-center justify-between">
+                        <div className="text-[15px] font-bold text-[#1a1408]">Customer ratings</div>
+                        <div className="text-[12.5px] text-[#1a1408]/55">{stats.total} total</div>
                     </div>
 
                     {sortedRatings.length === 0 ? (

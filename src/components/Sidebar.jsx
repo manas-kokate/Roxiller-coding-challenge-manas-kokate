@@ -3,11 +3,9 @@ import {
     LayoutDashboard,
     Store,
     Users,
-    UserPlus,
     UserCircle,
     LogOut,
-    X,
-    LockOpen
+    LockOpen,
 } from "lucide-react";
 
 const NAV = {
@@ -17,14 +15,14 @@ const NAV = {
         { id: "users", label: "Users", icon: Users },
     ],
     user: [
-        { id: "dashboard", label: "dashboard", icon: LayoutDashboard },
+        { id: "dashboard", label: "Dashboard", icon: LayoutDashboard },
         { id: "profile", label: "Profile", icon: UserCircle },
-        { id: "change-password", label: "Change Password", icon: LockOpen }
+        { id: "change-password", label: "Change Password", icon: LockOpen },
     ],
     owner: [
         { id: "dashboard", label: "Dashboard", icon: LayoutDashboard },
         { id: "change-password", label: "Change Password", icon: LockOpen },
-    ]
+    ],
 };
 
 const ROLE_META = {
@@ -50,80 +48,32 @@ export function Sidebar({
             {mobileOpen && (
                 <div
                     onClick={() => setMobileOpen(false)}
-                    className="vg-scrim"
-                    style={{
-                        position: "fixed",
-                        inset: 0,
-                        background: "rgb(var(--color-ink) / 0.35)",
-                        zIndex: 39,
-                    }}
+                    className="vg-scrim fixed inset-0 z-[39] bg-black/40"
                 />
             )}
 
-            <aside
-                className="vg-sidebar font-body"
-                style={{
-                    width: 260,
-                    minWidth: 260,
-                    height: "100vh",
-                    display: "flex",
-                    flexDirection: "column",
-                    padding: "20px 14px",
-                    boxSizing: "border-box",
-                    position: "sticky",
-                    top: 0,
-                    background: "rgb(var(--color-bg))",
-                    borderRight: "1px solid rgb(var(--color-ink) / 0.12)",
-                    color: "rgb(var(--color-ink))",
-                }}
-            >
+            <aside className="vg-sidebar font-body sticky top-0 flex h-screen w-[260px] min-w-[260px] flex-col bg-[#121213] px-3.5 py-5 text-[#f5f3ef] box-border border-r border-white/10">
                 {/* Logo */}
-                <div style={{ display: "flex", alignItems: "center", gap: 10, padding: "4px 8px 20px" }}>
-                    <div
-                        className="font-display"
-                        style={{
-                            width: 34,
-                            height: 34,
-                            borderRadius: 9,
-                            background: "rgb(var(--color-ink))",
-                            color: "rgb(var(--color-bg))",
-                            display: "flex",
-                            alignItems: "center",
-                            justifyContent: "center",
-                            fontWeight: 700,
-                            fontSize: 17,
-                            flexShrink: 0,
-                        }}
-                    >
+                <div className="flex items-center gap-2.5 px-2 pb-5 pt-1">
+                    <div className="font-display flex h-[34px] w-[34px] shrink-0 items-center justify-center rounded-[9px] bg-[#e8a33d] text-[17px] font-bold text-[#1a1408]">
                         V
                     </div>
-                    <div style={{ overflow: "hidden" }}>
-                        <div className="font-display" style={{ fontSize: 17, fontWeight: 700, lineHeight: 1.1 }}>
+                    <div className="overflow-hidden">
+                        <div className="font-display text-[17px] font-bold leading-tight">
                             Vantage
                         </div>
-                        <div style={{ fontSize: 11, opacity: 0.55, marginTop: 1, whiteSpace: "nowrap" }}>
+                        <div className="mt-px whitespace-nowrap text-[11px] text-white/40">
                             Store ratings platform
                         </div>
                     </div>
                     <button
-                        className="vg-mobile-only"
+                        className="vg-mobile-only ml-auto cursor-pointer border-none bg-transparent text-[#f5f3ef] opacity-70"
                         onClick={() => setMobileOpen(false)}
-                        style={{
-                            marginLeft: "auto",
-                            background: "none",
-                            border: "none",
-                            color: "rgb(var(--color-ink))",
-                            cursor: "pointer",
-                            opacity: 0.7,
-                        }}
-                    >
-                    </button>
+                    />
                 </div>
 
-                {/* Preview role toggle */}
-
                 {/* Nav */}
-                <nav style={{ display: "flex", flexDirection: "column", gap: 3 }}>
+                <nav className="flex flex-col gap-0.5">
                     {NAV[role].map((item) => {
                         const Icon = item.icon;
                         const active = activeNav === item.id;
@@ -134,23 +84,10 @@ export function Sidebar({
                                     setActiveNav(item.id);
                                     setMobileOpen(false);
                                 }}
-                                className="vg-nav-item"
-                                style={{
-                                    display: "flex",
-                                    alignItems: "center",
-                                    gap: 11,
-                                    padding: "10px 12px",
-                                    borderRadius: 8,
-                                    border: "none",
-                                    cursor: "pointer",
-                                    textAlign: "left",
-                                    fontSize: 14,
-                                    fontWeight: 600,
-                                    fontFamily: "'Manrope', sans-serif",
-                                    background: active ? "rgb(var(--color-ink))" : "transparent",
-                                    color: active ? "rgb(var(--color-bg))" : "rgb(var(--color-ink) / 0.7)",
-                                    transition: "background .12s ease, color .12s ease",
-                                }}
+                                className={`vg-nav-item flex cursor-pointer items-center gap-2.5 rounded-lg border-none px-3 py-2.5 text-left font-['Manrope',sans-serif] text-sm font-semibold transition-colors duration-150 ${active
+                                        ? "bg-[#f5f3ef] text-[#121213]"
+                                        : "bg-transparent text-white/60 hover:bg-white/5 hover:text-[#f5f3ef]"
+                                    }`}
                             >
                                 <Icon size={17} />
                                 {item.label}
@@ -159,71 +96,27 @@ export function Sidebar({
                     })}
                 </nav>
 
-                <div style={{ flexGrow: 1 }} />
+                <div className="flex-grow" />
 
                 {/* User card + logout */}
-                <div style={{ borderTop: "1px solid rgb(var(--color-ink) / 0.12)", paddingTop: 14 }}>
-                    <div
-                        style={{
-                            display: "flex",
-                            alignItems: "center",
-                            gap: 10,
-                            padding: "0 8px",
-                            marginBottom: 10,
-                        }}
-                    >
-                        <div
-                            style={{
-                                width: 32,
-                                height: 32,
-                                borderRadius: "50%",
-                                background: "rgb(var(--color-ink) / 0.1)",
-                                display: "flex",
-                                alignItems: "center",
-                                justifyContent: "center",
-                                fontSize: 13,
-                                fontWeight: 700,
-                                flexShrink: 0,
-                            }}
-                        >
+                <div className="border-t border-white/10 pt-3.5">
+                    <div className="mb-2.5 flex items-center gap-2.5 px-2">
+                        <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-white/10 text-[13px] font-bold">
                             {person.name
                                 .split(" ")
                                 .map((n) => n[0])
                                 .join("")}
                         </div>
-                        <div style={{ overflow: "hidden" }}>
-                            <div
-                                style={{
-                                    fontSize: 13.5,
-                                    fontWeight: 600,
-                                    whiteSpace: "nowrap",
-                                    overflow: "hidden",
-                                    textOverflow: "ellipsis",
-                                }}
-                            >
+                        <div className="overflow-hidden">
+                            <div className="truncate text-[13.5px] font-semibold">
                                 {person.name}
                             </div>
-                            <div style={{ fontSize: 12, opacity: 0.55 }}>{person.label}</div>
+                            <div className="text-xs text-white/40">{person.label}</div>
                         </div>
                     </div>
                     <button
                         onClick={onLogout}
-                        className="vg-logout"
-                        style={{
-                            display: "flex",
-                            alignItems: "center",
-                            gap: 10,
-                            width: "100%",
-                            padding: "9px 12px",
-                            borderRadius: 8,
-                            border: "none",
-                            background: "transparent",
-                            color: "rgb(var(--color-ink) / 0.6)",
-                            fontSize: 14,
-                            fontWeight: 600,
-                            fontFamily: "'Manrope', sans-serif",
-                            cursor: "pointer",
-                        }}
+                        className="vg-logout flex w-full cursor-pointer items-center gap-2.5 rounded-lg border-none bg-transparent px-3 py-2.5 font-['Manrope',sans-serif] text-sm font-semibold text-white/50 transition-colors hover:bg-white/5 hover:text-[#f5f3ef]"
                     >
                         <LogOut size={17} /> Log out
                     </button>

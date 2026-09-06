@@ -56,17 +56,16 @@ const INITIAL_USERS = [
 ];
 
 /* ------------------------------------------------------------------ */
-/* ROLE TOKENS — one palette entry drives the avatar, the badge and    */
-/* the filter pill, so a role reads the same color everywhere.         */
+/* ROLE TOKENS                                                         */
 /* ------------------------------------------------------------------ */
 const ROLES = {
-    admin: { label: "Admin", text: "#A23B2E", bg: "rgb(162 59 46 / 0.1)" },
+    admin: { label: "Admin", text: "#A23B2E", bg: "rgba(162, 59, 46, 0.1)" },
     user: {
         label: "Normal user",
-        text: "rgb(var(--color-ink) / 0.65)",
-        bg: "rgb(var(--color-ink) / 0.07)",
+        text: "rgba(26, 20, 8, 0.65)",
+        bg: "rgba(26, 20, 8, 0.07)",
     },
-    owner: { label: "Store owner", text: "#2F6B45", bg: "rgb(47 107 69 / 0.1)" },
+    owner: { label: "Store owner", text: "#2F6B45", bg: "rgba(47, 107, 69, 0.1)" },
 };
 
 const ROLE_FILTERS = [["all", "All"], ...Object.entries(ROLES).map(([k, v]) => [k, v.label])];
@@ -111,8 +110,7 @@ function RoleBadge({ role }) {
 }
 
 /* ------------------------------------------------------------------ */
-/* USER ROW — isolated so filtering/searching only re-renders the      */
-/* rows whose visibility actually changed.                             */
+/* USER ROW                                                             */
 /* ------------------------------------------------------------------ */
 const UserRow = React.memo(function UserRow({ user, onView }) {
     return (
@@ -143,8 +141,7 @@ const UserRow = React.memo(function UserRow({ user, onView }) {
 });
 
 /* ------------------------------------------------------------------ */
-/* FIELD — shared text input, kept separate so typing never re-renders */
-/* anything outside the form.                                          */
+/* FIELD                                                                */
 /* ------------------------------------------------------------------ */
 function Field({ label, value, onChange, placeholder, type = "text" }) {
     return (
@@ -163,8 +160,7 @@ function Field({ label, value, onChange, placeholder, type = "text" }) {
 }
 
 /* ------------------------------------------------------------------ */
-/* ROLE PICKER — tactile pill selector used in the add-user form,      */
-/* echoing the same segmented control used to filter the list.         */
+/* ROLE PICKER                                                          */
 /* ------------------------------------------------------------------ */
 function RolePicker({ value, onChange }) {
     return (
@@ -192,7 +188,7 @@ function RolePicker({ value, onChange }) {
 }
 
 /* ------------------------------------------------------------------ */
-/* DRAWER — generic slide-over shell reused by add + view panels.      */
+/* DRAWER                                                               */
 /* ------------------------------------------------------------------ */
 function Drawer({ open, onClose, title, subtitle, children }) {
     return (
@@ -370,15 +366,15 @@ export function Users() {
     }, []);
 
     return (
-        <div className="ud-root">
+        <div className="ud-root max-w-screen">
             <style>{`
                 @import url('https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&display=swap');
 
                 .ud-root {
                     padding: 32px 36px 60px;
-                    max-width: 1140px;
                     font-family: 'Manrope', sans-serif;
-                    color: rgb(var(--color-ink));
+                    color: #1a1408;
+                    background: #f7f5f0;
                 }
                 .ud-header {
                     display: flex;
@@ -387,7 +383,7 @@ export function Users() {
                     gap: 16px;
                     flex-wrap: wrap;
                     padding-bottom: 22px;
-                    border-bottom: 1px solid rgb(var(--color-ink) / 0.12);
+                    border-bottom: 1px solid rgba(26, 20, 8, 0.12);
                     margin-bottom: 22px;
                 }
                 .ud-title {
@@ -396,11 +392,12 @@ export function Users() {
                     font-weight: 600;
                     margin: 0;
                     letter-spacing: -0.01em;
+                    color: #1a1408;
                 }
                 .ud-subtitle {
                     margin: 6px 0 0;
                     font-size: 14px;
-                    color: rgb(var(--color-ink) / 0.55);
+                    color: rgba(26, 20, 8, 0.55);
                 }
                 .ud-add-btn {
                     display: flex;
@@ -409,15 +406,15 @@ export function Users() {
                     padding: 11px 18px;
                     border-radius: 10px;
                     border: none;
-                    background: rgb(var(--color-ink));
-                    color: rgb(var(--color-bg));
+                    background: #e8a33d;
+                    color: #1a1408;
                     font-size: 14px;
                     font-weight: 600;
                     cursor: pointer;
                     font-family: 'Manrope', sans-serif;
                     transition: opacity 0.15s ease;
                 }
-                .ud-add-btn:hover { opacity: 0.85; }
+                .ud-add-btn:hover { opacity: 0.9; }
 
                 .ud-toolbar {
                     display: flex;
@@ -433,10 +430,10 @@ export function Users() {
                     flex: 1;
                     min-width: 220px;
                     padding: 4px 2px 12px;
-                    border-bottom: 2px solid rgb(var(--color-ink) / 0.15);
+                    border-bottom: 2px solid rgba(26, 20, 8, 0.15);
                     transition: border-color 0.15s ease;
                 }
-                .ud-search:focus-within { border-color: rgb(var(--color-ink) / 0.6); }
+                .ud-search:focus-within { border-color: rgba(26, 20, 8, 0.5); }
                 .ud-search input {
                     flex: 1;
                     border: none;
@@ -444,15 +441,15 @@ export function Users() {
                     background: transparent;
                     font-size: 15px;
                     font-family: 'Manrope', sans-serif;
-                    color: rgb(var(--color-ink));
+                    color: #1a1408;
                 }
-                .ud-search input::placeholder { color: rgb(var(--color-ink) / 0.4); }
-                .ud-search-icon { color: rgb(var(--color-ink) / 0.4); flex-shrink: 0; }
+                .ud-search input::placeholder { color: rgba(26, 20, 8, 0.4); }
+                .ud-search-icon { color: rgba(26, 20, 8, 0.4); flex-shrink: 0; }
                 .ud-clear-btn {
                     background: none;
                     border: none;
                     cursor: pointer;
-                    color: rgb(var(--color-ink) / 0.45);
+                    color: rgba(26, 20, 8, 0.45);
                     padding: 0;
                     display: flex;
                 }
@@ -462,7 +459,7 @@ export function Users() {
                     gap: 4px;
                     padding: 4px;
                     border-radius: 10px;
-                    background: rgb(var(--color-ink) / 0.05);
+                    background: rgba(26, 20, 8, 0.05);
                     flex-wrap: wrap;
                 }
                 .ud-segment {
@@ -472,34 +469,34 @@ export function Users() {
                     border-radius: 7px;
                     font-size: 13px;
                     font-weight: 600;
-                    color: rgb(var(--color-ink) / 0.6);
+                    color: rgba(26, 20, 8, 0.6);
                     cursor: pointer;
                     font-family: 'Manrope', sans-serif;
                     transition: background 0.15s ease, color 0.15s ease;
                     white-space: nowrap;
                 }
-                .ud-segment:hover { color: rgb(var(--color-ink) / 0.85); }
+                .ud-segment:hover { color: rgba(26, 20, 8, 0.85); }
                 .ud-segment-active {
-                    background: rgb(var(--color-bg));
-                    color: rgb(var(--color-ink));
-                    box-shadow: 0 1px 3px rgb(0 0 0 / 0.08);
+                    background: #ffffff;
+                    color: #1a1408;
+                    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
                 }
 
                 .ud-list {
-                    border: 1px solid rgb(var(--color-ink) / 0.1);
+                    border: 1px solid rgba(26, 20, 8, 0.1);
                     border-radius: 14px;
                     overflow: hidden;
-                    background: rgb(var(--color-bg));
+                    background: #ffffff;
                 }
                 .ud-list-head {
                     display: grid;
                     grid-template-columns: 2.1fr 1.6fr 1.1fr 44px;
                     gap: 16px;
                     padding: 12px 20px;
-                    background: rgb(var(--color-ink) / 0.035);
+                    background: rgba(26, 20, 8, 0.04);
                     font-size: 12px;
                     font-weight: 600;
-                    color: rgb(var(--color-ink) / 0.5);
+                    color: rgba(26, 20, 8, 0.5);
                 }
                 .ud-row {
                     display: grid;
@@ -507,10 +504,10 @@ export function Users() {
                     gap: 16px;
                     align-items: center;
                     padding: 13px 20px;
-                    border-top: 1px solid rgb(var(--color-ink) / 0.07);
+                    border-top: 1px solid rgba(26, 20, 8, 0.07);
                     transition: background 0.12s ease;
                 }
-                .ud-row:hover { background: rgb(var(--color-ink) / 0.025); }
+                .ud-row:hover { background: rgba(26, 20, 8, 0.025); }
                 .ud-row-identity { display: flex; align-items: center; gap: 12px; min-width: 0; }
                 .ud-avatar {
                     border-radius: 50%;
@@ -525,20 +522,21 @@ export function Users() {
                 .ud-row-name {
                     font-weight: 600;
                     font-size: 14px;
+                    color: #1a1408;
                     white-space: nowrap;
                     overflow: hidden;
                     text-overflow: ellipsis;
                 }
                 .ud-row-email {
                     font-size: 12.5px;
-                    color: rgb(var(--color-ink) / 0.55);
+                    color: rgba(26, 20, 8, 0.55);
                     white-space: nowrap;
                     overflow: hidden;
                     text-overflow: ellipsis;
                 }
                 .ud-row-address {
                     font-size: 13.5px;
-                    color: rgb(var(--color-ink) / 0.65);
+                    color: rgba(26, 20, 8, 0.65);
                     white-space: nowrap;
                     overflow: hidden;
                     text-overflow: ellipsis;
@@ -562,28 +560,28 @@ export function Users() {
                     background: none;
                     border: none;
                     cursor: pointer;
-                    color: rgb(var(--color-ink) / 0.5);
+                    color: rgba(26, 20, 8, 0.5);
                     padding: 6px;
                     border-radius: 8px;
                     display: flex;
                     transition: background 0.12s ease, color 0.12s ease;
                 }
                 .ud-icon-btn:hover {
-                    background: rgb(var(--color-ink) / 0.07);
-                    color: rgb(var(--color-ink));
+                    background: rgba(26, 20, 8, 0.07);
+                    color: #1a1408;
                 }
 
                 .ud-empty {
                     padding: 64px 16px;
                     text-align: center;
-                    color: rgb(var(--color-ink) / 0.5);
+                    color: rgba(26, 20, 8, 0.5);
                     font-size: 14px;
                 }
 
                 .ud-backdrop {
                     position: fixed;
                     inset: 0;
-                    background: rgb(0 0 0 / 0.35);
+                    background: rgba(0, 0, 0, 0.35);
                     opacity: 0;
                     pointer-events: none;
                     transition: opacity 0.2s ease;
@@ -598,14 +596,15 @@ export function Users() {
                     bottom: 0;
                     width: 400px;
                     max-width: 90vw;
-                    background: rgb(var(--color-bg));
-                    box-shadow: -8px 0 30px rgb(0 0 0 / 0.12);
+                    background: #ffffff;
+                    box-shadow: -8px 0 30px rgba(0, 0, 0, 0.12);
                     transform: translateX(100%);
                     transition: transform 0.25s ease;
                     z-index: 51;
                     padding: 30px 30px 34px;
                     box-sizing: border-box;
                     overflow-y: auto;
+                    color: #1a1408;
                 }
                 .ud-drawer-open { transform: translateX(0); }
 
@@ -620,10 +619,11 @@ export function Users() {
                     font-size: 22px;
                     font-weight: 600;
                     margin: 0;
+                    color: #1a1408;
                 }
                 .ud-drawer-subtitle {
                     font-size: 13.5px;
-                    color: rgb(var(--color-ink) / 0.6);
+                    color: rgba(26, 20, 8, 0.6);
                     line-height: 1.5;
                     margin: 0 0 26px;
                 }
@@ -633,32 +633,32 @@ export function Users() {
                 .ud-field-label {
                     font-size: 13px;
                     font-weight: 600;
-                    color: rgb(var(--color-ink) / 0.75);
+                    color: rgba(26, 20, 8, 0.75);
                 }
                 .ud-input {
                     width: 100%;
                     padding: 10px 12px;
                     border-radius: 8px;
-                    border: 1px solid rgb(var(--color-ink) / 0.15);
-                    background: rgb(var(--color-ink) / 0.03);
+                    border: 1px solid rgba(26, 20, 8, 0.15);
+                    background: rgba(26, 20, 8, 0.03);
                     font-size: 14px;
                     font-family: 'Manrope', sans-serif;
                     outline: none;
-                    color: rgb(var(--color-ink));
+                    color: #1a1408;
                     box-sizing: border-box;
                     transition: border-color 0.15s ease;
                 }
-                .ud-input:focus { border-color: rgb(var(--color-ink) / 0.5); }
+                .ud-input:focus { border-color: rgba(26, 20, 8, 0.45); }
 
                 .ud-role-picker { display: flex; gap: 6px; flex-wrap: wrap; }
                 .ud-role-pick {
                     padding: 8px 13px;
                     border-radius: 8px;
-                    border: 1px solid rgb(var(--color-ink) / 0.15);
+                    border: 1px solid rgba(26, 20, 8, 0.15);
                     background: transparent;
                     font-size: 13px;
                     font-weight: 600;
-                    color: rgb(var(--color-ink) / 0.65);
+                    color: rgba(26, 20, 8, 0.65);
                     cursor: pointer;
                     font-family: 'Manrope', sans-serif;
                     transition: border-color 0.15s ease;
@@ -670,15 +670,15 @@ export function Users() {
                     padding: 12px 0;
                     border-radius: 9px;
                     border: none;
-                    background: rgb(var(--color-ink));
-                    color: rgb(var(--color-bg));
+                    background: #e8a33d;
+                    color: #1a1408;
                     font-size: 14px;
                     font-weight: 600;
                     cursor: pointer;
                     font-family: 'Manrope', sans-serif;
                     transition: opacity 0.15s ease;
                 }
-                .ud-submit-btn:hover { opacity: 0.85; }
+                .ud-submit-btn:hover { opacity: 0.9; }
 
                 .ud-detail-identity {
                     display: flex;
@@ -691,25 +691,26 @@ export function Users() {
                     font-size: 18px;
                     font-weight: 600;
                     margin-bottom: 6px;
+                    color: #1a1408;
                 }
                 .ud-detail-list {
                     display: flex;
                     flex-direction: column;
                     gap: 18px;
                     padding-top: 18px;
-                    border-top: 1px solid rgb(var(--color-ink) / 0.1);
+                    border-top: 1px solid rgba(26, 20, 8, 0.1);
                 }
                 .ud-detail-row { display: flex; gap: 10px; align-items: flex-start; }
-                .ud-detail-icon { margin-top: 3px; color: rgb(var(--color-ink) / 0.45); flex-shrink: 0; }
+                .ud-detail-icon { margin-top: 3px; color: rgba(26, 20, 8, 0.45); flex-shrink: 0; }
                 .ud-detail-label {
                     font-size: 11.5px;
                     font-weight: 600;
                     text-transform: uppercase;
                     letter-spacing: 0.03em;
-                    color: rgb(var(--color-ink) / 0.45);
+                    color: rgba(26, 20, 8, 0.45);
                     margin-bottom: 2px;
                 }
-                .ud-detail-value { font-size: 14.5px; font-weight: 500; }
+                .ud-detail-value { font-size: 14.5px; font-weight: 500; color: #1a1408; }
 
                 @media (max-width: 720px) {
                     .ud-list-head { display: none; }

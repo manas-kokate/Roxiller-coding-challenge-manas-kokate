@@ -65,76 +65,24 @@ export function Dashboard() {
     ];
 
     return (
-        <div style={{ padding: "32px 36px", maxWidth: 1200 }}>
+        <div className="max-w-screen bg-[#f7f5f0] px-6 py-8 text-[#1a1408] sm:px-9">
             {/* Header + Quick Actions */}
-            <div
-                style={{
-                    display: "flex",
-                    alignItems: "flex-end",
-                    justifyContent: "space-between",
-                    marginBottom: 32,
-                    gap: 20,
-                    flexWrap: "wrap",
-                }}
-            >
+            <div className="mb-8 flex flex-wrap items-end justify-between gap-5">
                 <div>
-                    <h1
-                        className="font-display"
-                        style={{
-                            fontSize: 28,
-                            fontWeight: 700,
-                            margin: 0,
-                            color: "rgb(var(--color-ink))",
-                            letterSpacing: "-0.02em",
-                        }}
-                    >
+                    <h1 className="font-display m-0 text-[28px] font-bold tracking-tight text-[#1a1408]">
                         Dashboard
                     </h1>
-                    <p
-                        style={{
-                            margin: "8px 0 0",
-                            fontSize: 14,
-                            opacity: 0.5,
-                        }}
-                    >
+                    <p className="mt-2 mb-0 text-sm text-[#1a1408]/55">
                         System overview · Last updated just now
                     </p>
                 </div>
 
-                <div style={{ display: "flex", gap: 10, flexWrap: "wrap" }}>
-                    <button
-                        style={{
-                            display: "inline-flex",
-                            alignItems: "center",
-                            gap: 8,
-                            padding: "10px 16px",
-                            borderRadius: 10,
-                            border: "1px solid rgb(var(--color-ink) / 0.12)",
-                            background: "rgb(var(--color-bg))",
-                            color: "rgb(var(--color-ink))",
-                            fontSize: 13.5,
-                            fontWeight: 600,
-                            cursor: "pointer",
-                        }}
-                    >
+                <div className="flex flex-wrap gap-2.5">
+                    <button className="inline-flex cursor-pointer items-center gap-2 rounded-[10px] border border-[#1a1408]/10 bg-white px-4 py-2.5 text-[13.5px] font-semibold text-[#1a1408] transition-colors hover:bg-[#1a1408]/5">
                         <UserPlus size={16} strokeWidth={2} />
                         Add User
                     </button>
-                    <button
-                        style={{
-                            display: "inline-flex",
-                            alignItems: "center",
-                            gap: 8,
-                            padding: "10px 16px",
-                            borderRadius: 10,
-                            border: "none",
-                            background: "rgb(var(--color-ink))",
-                            color: "rgb(var(--color-bg))",
-                            fontSize: 13.5,
-                            fontWeight: 600,
-                            cursor: "pointer",
-                        }}
-                    >
+                    <button className="inline-flex cursor-pointer items-center gap-2 rounded-[10px] border-none bg-[#e8a33d] px-4 py-2.5 text-[13.5px] font-semibold text-[#1a1408] transition-opacity hover:opacity-90">
                         <Plus size={16} strokeWidth={2.2} />
                         Add Store
                     </button>
@@ -142,101 +90,36 @@ export function Dashboard() {
             </div>
 
             {/* Stats Grid */}
-            <div
-                style={{
-                    display: "grid",
-                    gridTemplateColumns: "repeat(auto-fit, minmax(240px, 1fr))",
-                    gap: 18,
-                    marginBottom: 32,
-                }}
-            >
+            <div className="mb-8 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
                 {cards.map((card) => {
                     const Icon = card.icon;
                     return (
                         <div
                             key={card.label}
-                            style={{
-                                background: "rgb(var(--color-bg))",
-                                border: "1px solid rgb(var(--color-ink) / 0.08)",
-                                borderRadius: 16,
-                                padding: "22px 20px",
-                                display: "flex",
-                                flexDirection: "column",
-                                gap: 16,
-                                boxShadow: "0 1px 2px rgb(var(--color-ink) / 0.03)",
-                            }}
+                            className="flex flex-col gap-4 rounded-2xl border border-[#1a1408]/10 bg-white px-5 py-[22px]"
                         >
-                            <div
-                                style={{
-                                    display: "flex",
-                                    alignItems: "center",
-                                    justifyContent: "space-between",
-                                }}
-                            >
-                                <div
-                                    style={{
-                                        width: 40,
-                                        height: 40,
-                                        borderRadius: 11,
-                                        background: "rgb(var(--color-ink) / 0.06)",
-                                        display: "flex",
-                                        alignItems: "center",
-                                        justifyContent: "center",
-                                    }}
-                                >
-                                    <Icon
-                                        size={19}
-                                        strokeWidth={1.8}
-                                        style={{ color: "rgb(var(--color-ink))" }}
-                                    />
+                            <div className="flex items-center justify-between">
+                                <div className="flex h-10 w-10 items-center justify-center rounded-[11px] bg-[#1a1408]/5">
+                                    <Icon size={19} strokeWidth={1.8} className="text-[#1a1408]" />
                                 </div>
                                 <div
-                                    style={{
-                                        display: "inline-flex",
-                                        alignItems: "center",
-                                        gap: 4,
-                                        fontSize: 12,
-                                        fontWeight: 600,
-                                        padding: "3px 8px",
-                                        borderRadius: 20,
-                                        background: card.trend.positive
-                                            ? "rgb(34 197 94 / 0.1)"
-                                            : "rgb(239 68 68 / 0.1)",
-                                        color: card.trend.positive
-                                            ? "rgb(22 163 74)"
-                                            : "rgb(220 38 38)",
-                                    }}
+                                    className={`inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-xs font-semibold ${card.trend.positive
+                                        ? "bg-emerald-500/10 text-emerald-700"
+                                        : "bg-red-500/10 text-red-600"
+                                        }`}
                                 >
                                     <TrendingUp size={12} strokeWidth={2.2} />
                                     {card.trend.value}
                                 </div>
                             </div>
                             <div>
-                                <div
-                                    className="font-display"
-                                    style={{
-                                        fontSize: 32,
-                                        fontWeight: 700,
-                                        lineHeight: 1.1,
-                                        letterSpacing: "-0.03em",
-                                        color: "rgb(var(--color-ink))",
-                                    }}
-                                >
+                                <div className="font-display text-[32px] font-bold leading-tight tracking-tight text-[#1a1408]">
                                     {card.value.toLocaleString()}
                                 </div>
-                                <div
-                                    style={{
-                                        fontSize: 13,
-                                        fontWeight: 600,
-                                        opacity: 0.55,
-                                        marginTop: 5,
-                                    }}
-                                >
+                                <div className="mt-1.5 text-[13px] font-semibold text-[#1a1408]/55">
                                     {card.label}
                                 </div>
-                                <div style={{ fontSize: 12, opacity: 0.4, marginTop: 3 }}>
-                                    {card.hint}
-                                </div>
+                                <div className="mt-1 text-xs text-[#1a1408]/40">{card.hint}</div>
                             </div>
                         </div>
                     );
@@ -244,150 +127,48 @@ export function Dashboard() {
             </div>
 
             {/* Analytics Sections */}
-            <div
-                style={{
-                    display: "grid",
-                    gridTemplateColumns: "1.1fr 0.9fr",
-                    gap: 20,
-                }}
-            >
-                {/* Recently Added Stores – visual cards */}
+            <div className="grid grid-cols-1 gap-5 lg:grid-cols-[1.1fr_0.9fr]">
+                {/* Recently Added Stores */}
                 <div>
-                    <div
-                        style={{
-                            display: "flex",
-                            alignItems: "center",
-                            justifyContent: "space-between",
-                            marginBottom: 14,
-                        }}
-                    >
-                        <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-                            <Store size={16} strokeWidth={2} style={{ opacity: 0.65 }} />
-                            <span
-                                style={{
-                                    fontSize: 15,
-                                    fontWeight: 650,
-                                    color: "rgb(var(--color-ink))",
-                                }}
-                            >
+                    <div className="mb-3.5 flex items-center justify-between">
+                        <div className="flex items-center gap-2">
+                            <Store size={16} strokeWidth={2} className="text-[#1a1408]/55" />
+                            <span className="text-[15px] font-semibold text-[#1a1408]">
                                 Recently Added Stores
                             </span>
                         </div>
-                        <span style={{ fontSize: 12.5, opacity: 0.4 }}>Last 4</span>
+                        <span className="text-[12.5px] text-[#1a1408]/40">Last 4</span>
                     </div>
 
-                    <div
-                        style={{
-                            display: "grid",
-                            gridTemplateColumns: "1fr 1fr",
-                            gap: 14,
-                        }}
-                    >
+                    <div className="grid grid-cols-1 gap-3.5 sm:grid-cols-2">
                         {RECENT_STORES.map((store) => (
                             <div
                                 key={store.id}
-                                style={{
-                                    background: "rgb(var(--color-bg))",
-                                    border: "1px solid rgb(var(--color-ink) / 0.08)",
-                                    borderRadius: 14,
-                                    padding: "18px 16px",
-                                    display: "flex",
-                                    flexDirection: "column",
-                                    gap: 12,
-                                    boxShadow: "0 1px 2px rgb(var(--color-ink) / 0.03)",
-                                }}
+                                className="flex flex-col gap-3 rounded-[14px] border border-[#1a1408]/10 bg-white px-4 py-[18px]"
                             >
-                                <div
-                                    style={{
-                                        display: "flex",
-                                        alignItems: "flex-start",
-                                        justifyContent: "space-between",
-                                        gap: 8,
-                                    }}
-                                >
-                                    <div
-                                        style={{
-                                            width: 38,
-                                            height: 38,
-                                            borderRadius: 10,
-                                            background: "rgb(var(--color-ink) / 0.06)",
-                                            display: "flex",
-                                            alignItems: "center",
-                                            justifyContent: "center",
-                                            flexShrink: 0,
-                                        }}
-                                    >
-                                        <Store size={17} strokeWidth={1.8} style={{ opacity: 0.75 }} />
+                                <div className="flex items-start justify-between gap-2">
+                                    <div className="flex h-[38px] w-[38px] shrink-0 items-center justify-center rounded-[10px] bg-[#1a1408]/5">
+                                        <Store size={17} strokeWidth={1.8} className="text-[#1a1408]/70" />
                                     </div>
-                                    <div
-                                        style={{
-                                            display: "inline-flex",
-                                            alignItems: "center",
-                                            gap: 3,
-                                            fontSize: 13,
-                                            fontWeight: 700,
-                                            background: "rgb(var(--color-ink) / 0.06)",
-                                            padding: "3px 8px",
-                                            borderRadius: 8,
-                                        }}
-                                    >
-                                        <Star
-                                            size={12}
-                                            fill="currentColor"
-                                            strokeWidth={0}
-                                            style={{ opacity: 0.85 }}
-                                        />
+                                    <div className="inline-flex items-center gap-1 rounded-lg bg-[#1a1408]/5 px-2 py-0.5 text-[13px] font-bold text-[#1a1408]">
+                                        <Star size={12} fill="currentColor" strokeWidth={0} className="text-[#e8a33d]" />
                                         {store.rating}
                                     </div>
                                 </div>
 
                                 <div>
-                                    <div
-                                        style={{
-                                            fontSize: 14.5,
-                                            fontWeight: 650,
-                                            color: "rgb(var(--color-ink))",
-                                            lineHeight: 1.25,
-                                            marginBottom: 4,
-                                        }}
-                                    >
+                                    <div className="mb-1 text-[14.5px] font-semibold leading-snug text-[#1a1408]">
                                         {store.name}
                                     </div>
-                                    <div
-                                        style={{
-                                            fontSize: 12,
-                                            opacity: 0.45,
-                                            display: "flex",
-                                            alignItems: "center",
-                                            gap: 4,
-                                        }}
-                                    >
+                                    <div className="flex items-center gap-1 text-xs text-[#1a1408]/45">
                                         <MapPin size={11} />
                                         {store.location}
                                     </div>
                                 </div>
 
-                                <div
-                                    style={{
-                                        display: "flex",
-                                        alignItems: "center",
-                                        justifyContent: "space-between",
-                                        marginTop: "auto",
-                                        paddingTop: 4,
-                                    }}
-                                >
-                                    <span style={{ fontSize: 12, opacity: 0.5 }}>
-                                        {store.owner}
-                                    </span>
-                                    <span
-                                        style={{
-                                            fontSize: 11.5,
-                                            opacity: 0.35,
-                                            display: "flex",
-                                            alignItems: "center",
-                                            gap: 3,
-                                        }}
-                                    >
+                                <div className="mt-auto flex items-center justify-between pt-1">
+                                    <span className="text-xs text-[#1a1408]/50">{store.owner}</span>
+                                    <span className="flex items-center gap-1 text-[11.5px] text-[#1a1408]/35">
                                         <Clock size={10} />
                                         {store.added}
                                     </span>
@@ -397,108 +178,52 @@ export function Dashboard() {
                     </div>
                 </div>
 
-                {/* Recent Ratings – visual review cards */}
+                {/* Recent Ratings */}
                 <div>
-                    <div
-                        style={{
-                            display: "flex",
-                            alignItems: "center",
-                            justifyContent: "space-between",
-                            marginBottom: 14,
-                        }}
-                    >
-                        <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-                            <Star size={16} strokeWidth={2} style={{ opacity: 0.65 }} />
-                            <span
-                                style={{
-                                    fontSize: 15,
-                                    fontWeight: 650,
-                                    color: "rgb(var(--color-ink))",
-                                }}
-                            >
+                    <div className="mb-3.5 flex items-center justify-between">
+                        <div className="flex items-center gap-2">
+                            <Star size={16} strokeWidth={2} className="text-[#1a1408]/55" />
+                            <span className="text-[15px] font-semibold text-[#1a1408]">
                                 Recent Ratings
                             </span>
                         </div>
-                        <span style={{ fontSize: 12.5, opacity: 0.4 }}>Last 4</span>
+                        <span className="text-[12.5px] text-[#1a1408]/40">Last 4</span>
                     </div>
 
-                    <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
+                    <div className="flex flex-col gap-3">
                         {RECENT_RATINGS.map((item) => (
                             <div
                                 key={item.id}
-                                style={{
-                                    background: "rgb(var(--color-bg))",
-                                    border: "1px solid rgb(var(--color-ink) / 0.08)",
-                                    borderRadius: 14,
-                                    padding: "16px 18px",
-                                    boxShadow: "0 1px 2px rgb(var(--color-ink) / 0.03)",
-                                }}
+                                className="rounded-[14px] border border-[#1a1408]/10 bg-white px-[18px] py-4"
                             >
-                                <div
-                                    style={{
-                                        display: "flex",
-                                        alignItems: "center",
-                                        justifyContent: "space-between",
-                                        marginBottom: 8,
-                                    }}
-                                >
-                                    <span
-                                        style={{
-                                            fontSize: 13.5,
-                                            fontWeight: 650,
-                                            color: "rgb(var(--color-ink))",
-                                        }}
-                                    >
+                                <div className="mb-2 flex items-center justify-between">
+                                    <span className="text-[13.5px] font-semibold text-[#1a1408]">
                                         {item.user}
                                     </span>
-                                    <div style={{ display: "flex", gap: 2 }}>
+                                    <div className="flex gap-0.5">
                                         {Array.from({ length: 5 }).map((_, i) => (
                                             <Star
                                                 key={i}
                                                 size={13}
                                                 fill={i < item.rating ? "currentColor" : "none"}
                                                 strokeWidth={i < item.rating ? 0 : 1.5}
-                                                style={{
-                                                    color: "rgb(var(--color-ink))",
-                                                    opacity: i < item.rating ? 0.9 : 0.2,
-                                                }}
+                                                className={
+                                                    i < item.rating
+                                                        ? "text-[#e8a33d]"
+                                                        : "text-[#1a1408]/20"
+                                                }
                                             />
                                         ))}
                                     </div>
                                 </div>
 
-                                <div
-                                    style={{
-                                        fontSize: 12.5,
-                                        opacity: 0.5,
-                                        marginBottom: 6,
-                                    }}
-                                >
-                                    {item.store}
-                                </div>
+                                <div className="mb-1.5 text-[12.5px] text-[#1a1408]/50">{item.store}</div>
 
-                                <p
-                                    style={{
-                                        margin: 0,
-                                        fontSize: 13,
-                                        lineHeight: 1.4,
-                                        opacity: 0.7,
-                                        fontStyle: "italic",
-                                    }}
-                                >
+                                <p className="m-0 text-[13px] italic leading-snug text-[#1a1408]/70">
                                     “{item.comment}”
                                 </p>
 
-                                <div
-                                    style={{
-                                        marginTop: 10,
-                                        fontSize: 11.5,
-                                        opacity: 0.35,
-                                        display: "flex",
-                                        alignItems: "center",
-                                        gap: 4,
-                                    }}
-                                >
+                                <div className="mt-2.5 flex items-center gap-1 text-[11.5px] text-[#1a1408]/35">
                                     <Clock size={11} />
                                     {item.time}
                                 </div>

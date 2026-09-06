@@ -88,8 +88,8 @@ export function ChangePassword() {
                     width: "100%",
                     minHeight: "100vh",
                     boxSizing: "border-box",
-                    color: "rgb(var(--color-ink))",
-                    background: "rgb(var(--color-bg))",
+                    color: "#1a1408",
+                    background: "#f7f5f0",
                     padding: "48px 24px",
                     display: "flex",
                     alignItems: "center",
@@ -103,8 +103,8 @@ export function ChangePassword() {
                         textAlign: "center",
                         padding: "40px 32px",
                         borderRadius: 16,
-                        border: "1px solid rgb(var(--color-ink) / 0.1)",
-                        background: "rgb(var(--color-bg))",
+                        border: "1px solid rgba(26, 20, 8, 0.1)",
+                        background: "#ffffff",
                     }}
                 >
                     <div
@@ -112,19 +112,19 @@ export function ChangePassword() {
                             width: 56,
                             height: 56,
                             borderRadius: 16,
-                            background: "rgb(34 197 94 / 0.12)",
+                            background: "rgba(34, 197, 94, 0.12)",
                             display: "flex",
                             alignItems: "center",
                             justifyContent: "center",
                             margin: "0 auto 20px",
                         }}
                     >
-                        <CheckCircle2 size={28} style={{ color: "rgb(22 163 74)" }} />
+                        <CheckCircle2 size={28} style={{ color: "rgb(22, 163, 74)" }} />
                     </div>
-                    <div className="font-display" style={{ fontSize: 20, fontWeight: 700, marginBottom: 8 }}>
+                    <div className="font-display" style={{ fontSize: 20, fontWeight: 700, marginBottom: 8, color: "#1a1408" }}>
                         Password updated
                     </div>
-                    <p style={{ fontSize: 14, opacity: 0.55, margin: 0, lineHeight: 1.5 }}>
+                    <p style={{ fontSize: 14, color: "rgba(26, 20, 8, 0.55)", margin: 0, lineHeight: 1.5 }}>
                         Your password has been changed successfully. You can now log in with your new password.
                     </p>
                 </div>
@@ -139,8 +139,8 @@ export function ChangePassword() {
                 width: "100%",
                 minHeight: "100vh",
                 boxSizing: "border-box",
-                color: "rgb(var(--color-ink))",
-                background: "rgb(var(--color-bg))",
+                color: "#1a1408",
+                background: "#f7f5f0",
                 padding: "48px 24px",
                 display: "flex",
                 alignItems: "center",
@@ -150,10 +150,10 @@ export function ChangePassword() {
             <div style={{ width: "100%", maxWidth: 440 }}>
                 {/* Header */}
                 <div style={{ marginBottom: 28, textAlign: "center" }}>
-                    <div className="font-display" style={{ fontSize: 26, fontWeight: 700, marginBottom: 6 }}>
+                    <div className="font-display" style={{ fontSize: 26, fontWeight: 700, marginBottom: 6, color: "#1a1408" }}>
                         Change Password
                     </div>
-                    <p style={{ fontSize: 14, opacity: 0.5, margin: 0 }}>
+                    <p style={{ fontSize: 14, color: "rgba(26, 20, 8, 0.5)", margin: 0 }}>
                         Enter your registered email and the OTP sent to it
                     </p>
                 </div>
@@ -161,8 +161,8 @@ export function ChangePassword() {
                 <form
                     onSubmit={handleSubmit}
                     style={{
-                        background: "rgb(var(--color-bg))",
-                        border: "1px solid rgb(var(--color-ink) / 0.1)",
+                        background: "#ffffff",
+                        border: "1px solid rgba(26, 20, 8, 0.1)",
                         borderRadius: 16,
                         padding: "28px 26px",
                         display: "flex",
@@ -177,11 +177,11 @@ export function ChangePassword() {
                                 display: "block",
                                 fontSize: 12.5,
                                 fontWeight: 600,
-                                opacity: 0.65,
+                                color: "rgba(26, 20, 8, 0.65)",
                                 marginBottom: 7,
                             }}
                         >
-                            Registered Email <span style={{ color: "rgb(220 38 38)" }}>*</span>
+                            Registered Email <span style={{ color: "rgb(220, 38, 38)" }}>*</span>
                         </label>
                         <div
                             style={{
@@ -191,13 +191,13 @@ export function ChangePassword() {
                                 padding: "11px 14px",
                                 borderRadius: 10,
                                 border: `1px solid ${errors.email
-                                    ? "rgb(220 38 38 / 0.5)"
-                                    : "rgb(var(--color-ink) / 0.14)"
+                                        ? "rgba(220, 38, 38, 0.5)"
+                                        : "rgba(26, 20, 8, 0.14)"
                                     }`,
-                                background: "rgb(var(--color-ink) / 0.025)",
+                                background: "rgba(26, 20, 8, 0.025)",
                             }}
                         >
-                            <Mail size={16} style={{ opacity: 0.45, flexShrink: 0 }} />
+                            <Mail size={16} style={{ color: "#e8a33d", flexShrink: 0 }} />
                             <input
                                 type="email"
                                 value={email}
@@ -212,7 +212,7 @@ export function ChangePassword() {
                                     background: "transparent",
                                     outline: "none",
                                     fontSize: 14,
-                                    color: "rgb(var(--color-ink))",
+                                    color: "#1a1408",
                                 }}
                             />
                         </div>
@@ -224,7 +224,7 @@ export function ChangePassword() {
                                     gap: 6,
                                     marginTop: 7,
                                     fontSize: 12.5,
-                                    color: "rgb(220 38 38)",
+                                    color: "rgb(220, 38, 38)",
                                 }}
                             >
                                 <AlertCircle size={13} />
@@ -240,11 +240,11 @@ export function ChangePassword() {
                                 display: "block",
                                 fontSize: 12.5,
                                 fontWeight: 600,
-                                opacity: 0.65,
+                                color: "rgba(26, 20, 8, 0.65)",
                                 marginBottom: 7,
                             }}
                         >
-                            OTP from Email <span style={{ color: "rgb(220 38 38)" }}>*</span>
+                            OTP from Email <span style={{ color: "rgb(220, 38, 38)" }}>*</span>
                         </label>
                         <div
                             style={{
@@ -254,13 +254,13 @@ export function ChangePassword() {
                                 padding: "11px 14px",
                                 borderRadius: 10,
                                 border: `1px solid ${errors.otp
-                                    ? "rgb(220 38 38 / 0.5)"
-                                    : "rgb(var(--color-ink) / 0.14)"
+                                        ? "rgba(220, 38, 38, 0.5)"
+                                        : "rgba(26, 20, 8, 0.14)"
                                     }`,
-                                background: "rgb(var(--color-ink) / 0.025)",
+                                background: "rgba(26, 20, 8, 0.025)",
                             }}
                         >
-                            <KeyRound size={16} style={{ opacity: 0.45, flexShrink: 0 }} />
+                            <KeyRound size={16} style={{ color: "#e8a33d", flexShrink: 0 }} />
                             <input
                                 type="text"
                                 inputMode="numeric"
@@ -277,7 +277,7 @@ export function ChangePassword() {
                                     background: "transparent",
                                     outline: "none",
                                     fontSize: 14,
-                                    color: "rgb(var(--color-ink))",
+                                    color: "#1a1408",
                                     letterSpacing: "0.08em",
                                 }}
                             />
@@ -290,14 +290,14 @@ export function ChangePassword() {
                                     gap: 6,
                                     marginTop: 7,
                                     fontSize: 12.5,
-                                    color: "rgb(220 38 38)",
+                                    color: "rgb(220, 38, 38)",
                                 }}
                             >
                                 <AlertCircle size={13} />
                                 {errors.otp}
                             </div>
                         )}
-                        <div style={{ fontSize: 12, opacity: 0.4, marginTop: 6 }}>
+                        <div style={{ fontSize: 12, color: "rgba(26, 20, 8, 0.4)", marginTop: 6 }}>
                             Demo OTP: <strong>123456</strong>
                         </div>
                     </div>
@@ -309,11 +309,11 @@ export function ChangePassword() {
                                 display: "block",
                                 fontSize: 12.5,
                                 fontWeight: 600,
-                                opacity: 0.65,
+                                color: "rgba(26, 20, 8, 0.65)",
                                 marginBottom: 7,
                             }}
                         >
-                            New Password <span style={{ color: "rgb(220 38 38)" }}>*</span>
+                            New Password <span style={{ color: "rgb(220, 38, 38)" }}>*</span>
                         </label>
                         <div
                             style={{
@@ -323,13 +323,13 @@ export function ChangePassword() {
                                 padding: "11px 14px",
                                 borderRadius: 10,
                                 border: `1px solid ${errors.newPassword
-                                    ? "rgb(220 38 38 / 0.5)"
-                                    : "rgb(var(--color-ink) / 0.14)"
+                                        ? "rgba(220, 38, 38, 0.5)"
+                                        : "rgba(26, 20, 8, 0.14)"
                                     }`,
-                                background: "rgb(var(--color-ink) / 0.025)",
+                                background: "rgba(26, 20, 8, 0.025)",
                             }}
                         >
-                            <Lock size={16} style={{ opacity: 0.45, flexShrink: 0 }} />
+                            <Lock size={16} style={{ color: "#e8a33d", flexShrink: 0 }} />
                             <input
                                 type={showNew ? "text" : "password"}
                                 value={newPassword}
@@ -345,7 +345,7 @@ export function ChangePassword() {
                                     background: "transparent",
                                     outline: "none",
                                     fontSize: 14,
-                                    color: "rgb(var(--color-ink))",
+                                    color: "#1a1408",
                                 }}
                             />
                             <button
@@ -355,7 +355,7 @@ export function ChangePassword() {
                                     border: "none",
                                     background: "transparent",
                                     cursor: "pointer",
-                                    color: "rgb(var(--color-ink) / 0.45)",
+                                    color: "#e8a33d",
                                     display: "flex",
                                     padding: 0,
                                 }}
@@ -371,7 +371,7 @@ export function ChangePassword() {
                                     gap: 6,
                                     marginTop: 7,
                                     fontSize: 12.5,
-                                    color: "rgb(220 38 38)",
+                                    color: "rgb(220, 38, 38)",
                                 }}
                             >
                                 <AlertCircle size={13} />
@@ -387,11 +387,11 @@ export function ChangePassword() {
                                 display: "block",
                                 fontSize: 12.5,
                                 fontWeight: 600,
-                                opacity: 0.65,
+                                color: "rgba(26, 20, 8, 0.65)",
                                 marginBottom: 7,
                             }}
                         >
-                            Confirm New Password <span style={{ color: "rgb(220 38 38)" }}>*</span>
+                            Confirm New Password <span style={{ color: "rgb(220, 38, 38)" }}>*</span>
                         </label>
                         <div
                             style={{
@@ -401,13 +401,13 @@ export function ChangePassword() {
                                 padding: "11px 14px",
                                 borderRadius: 10,
                                 border: `1px solid ${errors.confirmPassword
-                                    ? "rgb(220 38 38 / 0.5)"
-                                    : "rgb(var(--color-ink) / 0.14)"
+                                        ? "rgba(220, 38, 38, 0.5)"
+                                        : "rgba(26, 20, 8, 0.14)"
                                     }`,
-                                background: "rgb(var(--color-ink) / 0.025)",
+                                background: "rgba(26, 20, 8, 0.025)",
                             }}
                         >
-                            <Lock size={16} style={{ opacity: 0.45, flexShrink: 0 }} />
+                            <Lock size={16} style={{ color: "#e8a33d", flexShrink: 0 }} />
                             <input
                                 type={showConfirm ? "text" : "password"}
                                 value={confirmPassword}
@@ -423,7 +423,7 @@ export function ChangePassword() {
                                     background: "transparent",
                                     outline: "none",
                                     fontSize: 14,
-                                    color: "rgb(var(--color-ink))",
+                                    color: "#1a1408",
                                 }}
                             />
                             <button
@@ -433,7 +433,7 @@ export function ChangePassword() {
                                     border: "none",
                                     background: "transparent",
                                     cursor: "pointer",
-                                    color: "rgb(var(--color-ink) / 0.45)",
+                                    color: "#e8a33d",
                                     display: "flex",
                                     padding: 0,
                                 }}
@@ -449,7 +449,7 @@ export function ChangePassword() {
                                     gap: 6,
                                     marginTop: 7,
                                     fontSize: 12.5,
-                                    color: "rgb(220 38 38)",
+                                    color: "rgb(220, 38, 38)",
                                 }}
                             >
                                 <AlertCircle size={13} />
@@ -472,8 +472,8 @@ export function ChangePassword() {
                             padding: "13px 18px",
                             borderRadius: 10,
                             border: "none",
-                            background: "rgb(var(--color-ink))",
-                            color: "rgb(var(--color-bg))",
+                            background: "#e8a33d",
+                            color: "#1a1408",
                             fontSize: 14.5,
                             fontWeight: 650,
                             cursor: loading ? "default" : "pointer",

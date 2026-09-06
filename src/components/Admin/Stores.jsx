@@ -124,13 +124,13 @@ const defaultStores = [
 /* ------------------------------------------------------------------ */
 function StaticStars({ value, size = 14 }) {
     return (
-        <div style={{ display: "flex", gap: 2, alignItems: "center" }}>
+        <div className="flex items-center gap-0.5">
             {[1, 2, 3, 4, 5].map((n) => (
                 <Star
                     key={n}
                     size={size}
-                    fill={n <= Math.round(value) ? "#E8A33D" : "none"}
-                    style={{ color: "#E8A33D" }}
+                    fill={n <= Math.round(value) ? "#e8a33d" : "none"}
+                    className="text-[#e8a33d]"
                 />
             ))}
         </div>
@@ -152,82 +152,31 @@ function StoreDetailsModal({ store, onClose }) {
 
     return (
         <div
-            style={{
-                position: "fixed",
-                inset: 0,
-                background: "rgb(0 0 0 / 0.4)",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                zIndex: 50,
-                padding: 24,
-            }}
+            className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-6"
             onClick={onClose}
         >
             <div
-                style={{
-                    background: "rgb(var(--color-bg))",
-                    borderRadius: 16,
-                    border: "1px solid rgb(var(--color-ink) / 0.1)",
-                    width: "100%",
-                    maxWidth: 420,
-                    padding: "28px 26px",
-                    boxShadow: "0 20px 40px rgb(0 0 0 / 0.15)",
-                }}
+                className="w-full max-w-[420px] rounded-2xl border border-[#1a1408]/10 bg-white p-7 shadow-xl"
                 onClick={(e) => e.stopPropagation()}
             >
-                <div
-                    style={{
-                        display: "flex",
-                        alignItems: "flex-start",
-                        justifyContent: "space-between",
-                        marginBottom: 22,
-                    }}
-                >
-                    <div style={{ display: "flex", gap: 14, alignItems: "center" }}>
-                        <div
-                            style={{
-                                width: 52,
-                                height: 52,
-                                borderRadius: 13,
-                                background: "rgb(var(--color-ink) / 0.08)",
-                                display: "flex",
-                                alignItems: "center",
-                                justifyContent: "center",
-                                fontSize: 16,
-                                fontWeight: 700,
-                                flexShrink: 0,
-                            }}
-                        >
+                <div className="mb-5 flex items-start justify-between">
+                    <div className="flex items-center gap-3.5">
+                        <div className="flex h-[52px] w-[52px] shrink-0 items-center justify-center rounded-[13px] bg-[#1a1408]/5 text-base font-bold text-[#1a1408]">
                             {store.image ? (
                                 <img
                                     src={store.image}
                                     alt=""
-                                    style={{
-                                        width: "100%",
-                                        height: "100%",
-                                        objectFit: "cover",
-                                        borderRadius: 13,
-                                    }}
+                                    className="h-full w-full rounded-[13px] object-cover"
                                 />
                             ) : (
                                 initials
                             )}
                         </div>
                         <div>
-                            <div className="font-display" style={{ fontSize: 18, fontWeight: 700 }}>
+                            <div className="font-display text-lg font-bold text-[#1a1408]">
                                 {store.name}
                             </div>
-                            <div
-                                style={{
-                                    display: "flex",
-                                    alignItems: "center",
-                                    gap: 5,
-                                    fontSize: 13,
-                                    opacity: 0.55,
-                                    marginTop: 3,
-                                }}
-                            >
+                            <div className="mt-1 flex items-center gap-1.5 text-[13px] text-[#1a1408]/55">
                                 <MapPin size={13} />
                                 {store.address}
                             </div>
@@ -235,60 +184,39 @@ function StoreDetailsModal({ store, onClose }) {
                     </div>
                     <button
                         onClick={onClose}
-                        style={{
-                            border: "none",
-                            background: "rgb(var(--color-ink) / 0.06)",
-                            borderRadius: 8,
-                            width: 32,
-                            height: 32,
-                            display: "flex",
-                            alignItems: "center",
-                            justifyContent: "center",
-                            cursor: "pointer",
-                            color: "rgb(var(--color-ink))",
-                        }}
+                        className="flex h-8 w-8 cursor-pointer items-center justify-center rounded-lg border-none bg-[#1a1408]/5 text-[#1a1408]"
                     >
                         <X size={16} />
                     </button>
                 </div>
 
-                <div
-                    style={{
-                        display: "flex",
-                        alignItems: "center",
-                        justifyContent: "space-between",
-                        padding: "12px 14px",
-                        borderRadius: 10,
-                        background: "rgb(var(--color-ink) / 0.04)",
-                        marginBottom: 20,
-                    }}
-                >
-                    <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+                <div className="mb-5 flex items-center justify-between rounded-[10px] bg-[#1a1408]/5 px-3.5 py-3">
+                    <div className="flex items-center gap-2.5">
                         <StaticStars value={store.overallRating} size={16} />
-                        <span style={{ fontSize: 16, fontWeight: 700 }}>
+                        <span className="text-base font-bold text-[#1a1408]">
                             {store.overallRating.toFixed(1)}
                         </span>
                     </div>
-                    <span style={{ fontSize: 13, opacity: 0.55 }}>
+                    <span className="text-[13px] text-[#1a1408]/55">
                         {store.ratingsCount} {store.ratingsCount === 1 ? "rating" : "ratings"}
                     </span>
                 </div>
 
-                <div style={{ display: "flex", flexDirection: "column", gap: 14 }}>
-                    <div style={{ display: "flex", alignItems: "center", gap: 10, fontSize: 14 }}>
-                        <User size={15} style={{ opacity: 0.45, flexShrink: 0 }} />
-                        <span style={{ opacity: 0.5, minWidth: 60 }}>Owner</span>
-                        <span style={{ fontWeight: 600 }}>{store.ownerName}</span>
+                <div className="flex flex-col gap-3.5">
+                    <div className="flex items-center gap-2.5 text-sm text-[#1a1408]">
+                        <User size={15} className="shrink-0 text-[#1a1408]/45" />
+                        <span className="min-w-[60px] text-[#1a1408]/50">Owner</span>
+                        <span className="font-semibold">{store.ownerName}</span>
                     </div>
-                    <div style={{ display: "flex", alignItems: "center", gap: 10, fontSize: 14 }}>
-                        <Mail size={15} style={{ opacity: 0.45, flexShrink: 0 }} />
-                        <span style={{ opacity: 0.5, minWidth: 60 }}>Email</span>
-                        <span style={{ fontWeight: 600 }}>{store.email}</span>
+                    <div className="flex items-center gap-2.5 text-sm text-[#1a1408]">
+                        <Mail size={15} className="shrink-0 text-[#1a1408]/45" />
+                        <span className="min-w-[60px] text-[#1a1408]/50">Email</span>
+                        <span className="font-semibold">{store.email}</span>
                     </div>
-                    <div style={{ display: "flex", alignItems: "center", gap: 10, fontSize: 14 }}>
-                        <MapPin size={15} style={{ opacity: 0.45, flexShrink: 0 }} />
-                        <span style={{ opacity: 0.5, minWidth: 60 }}>Address</span>
-                        <span style={{ fontWeight: 600 }}>{store.address}</span>
+                    <div className="flex items-center gap-2.5 text-sm text-[#1a1408]">
+                        <MapPin size={15} className="shrink-0 text-[#1a1408]/45" />
+                        <span className="min-w-[60px] text-[#1a1408]/50">Address</span>
+                        <span className="font-semibold">{store.address}</span>
                     </div>
                 </div>
             </div>
@@ -326,112 +254,37 @@ export function Stores({ stores = defaultStores }) {
     const paginated = filtered.slice((currentPage - 1) * PAGE_SIZE, currentPage * PAGE_SIZE);
 
     return (
-        <div
-            className="font-body"
-            style={{
-                width: "100%",
-                minHeight: "100vh",
-                boxSizing: "border-box",
-                color: "rgb(var(--color-ink))",
-                background: "rgb(var(--color-bg))",
-                padding: "36px 40px",
-            }}
-        >
+        <div className="font-body box-border min-h-screen w-full bg-[#f7f5f0] px-6 py-9 text-[#1a1408] sm:px-10">
             {/* Title */}
-            <div className="font-display" style={{ fontSize: 26, fontWeight: 700, marginBottom: 20 }}>
-                Stores
-            </div>
+            <div className="font-display mb-5 text-[26px] font-bold text-[#1a1408]">Stores</div>
 
-            {/* Single-line toolbar: count + search + button */}
-            <div
-                style={{
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "space-between",
-                    gap: 16,
-                    marginBottom: 22,
-                    flexWrap: "wrap",
-                }}
-            >
-                <div style={{ fontSize: 13.5, opacity: 0.55, whiteSpace: "nowrap" }}>
+            {/* Toolbar */}
+            <div className="mb-5 flex flex-wrap items-center justify-between gap-4">
+                <div className="whitespace-nowrap text-[13.5px] text-[#1a1408]/55">
                     {filtered.length} of {stores.length} registered{" "}
                     {stores.length === 1 ? "store" : "stores"}
                 </div>
 
-                <div
-                    style={{
-                        display: "flex",
-                        alignItems: "center",
-                        gap: 10,
-                        flex: 1,
-                        justifyContent: "flex-end",
-                        minWidth: 280,
-                    }}
-                >
-                    {/* Compact single search */}
-                    <div
-                        style={{
-                            display: "flex",
-                            alignItems: "center",
-                            gap: 8,
-                            padding: "8px 12px",
-                            borderRadius: 9,
-                            border: "1px solid rgb(var(--color-ink) / 0.12)",
-                            background: "rgb(var(--color-ink) / 0.03)",
-                            width: "100%",
-                            maxWidth: 280,
-                        }}
-                    >
-                        <Search size={15} style={{ opacity: 0.45, flexShrink: 0 }} />
+                <div className="flex min-w-[280px] flex-1 items-center justify-end gap-2.5">
+                    <div className="flex w-full max-w-[280px] items-center gap-2 rounded-[9px] border border-[#1a1408]/10 bg-white px-3 py-2">
+                        <Search size={15} className="shrink-0 text-[#1a1408]/45" />
                         <input
                             value={query}
                             onChange={(e) => setQuery(e.target.value)}
                             placeholder="Search name, email or address"
-                            style={{
-                                flex: 1,
-                                border: "none",
-                                background: "transparent",
-                                outline: "none",
-                                fontSize: 13,
-                                color: "rgb(var(--color-ink))",
-                                minWidth: 0,
-                            }}
+                            className="min-w-0 flex-1 border-none bg-transparent text-[13px] text-[#1a1408] outline-none placeholder:text-[#1a1408]/40"
                         />
                         {query && (
                             <button
                                 onClick={() => setQuery("")}
-                                style={{
-                                    border: "none",
-                                    background: "transparent",
-                                    cursor: "pointer",
-                                    color: "rgb(var(--color-ink) / 0.45)",
-                                    display: "flex",
-                                    padding: 0,
-                                }}
+                                className="flex cursor-pointer border-none bg-transparent p-0 text-[#1a1408]/45"
                             >
                                 <X size={14} />
                             </button>
                         )}
                     </div>
 
-                    {/* Add Store button */}
-                    <button
-                        style={{
-                            display: "inline-flex",
-                            alignItems: "center",
-                            gap: 7,
-                            padding: "9px 16px",
-                            borderRadius: 9,
-                            border: "none",
-                            background: "rgb(var(--color-ink))",
-                            color: "rgb(var(--color-bg))",
-                            fontSize: 13.5,
-                            fontWeight: 600,
-                            cursor: "pointer",
-                            whiteSpace: "nowrap",
-                            flexShrink: 0,
-                        }}
-                    >
+                    <button className="inline-flex shrink-0 cursor-pointer items-center gap-1.5 whitespace-nowrap rounded-[9px] border-none bg-[#e8a33d] px-4 py-2.5 text-[13.5px] font-semibold text-[#1a1408] transition-opacity hover:opacity-90">
                         <Plus size={15} strokeWidth={2.2} />
                         Add Store
                     </button>
@@ -439,41 +292,15 @@ export function Stores({ stores = defaultStores }) {
             </div>
 
             {/* Table */}
-            <div
-                style={{
-                    border: "1px solid rgb(var(--color-ink) / 0.1)",
-                    borderRadius: 14,
-                    overflow: "hidden",
-                    background: "rgb(var(--color-bg))",
-                }}
-            >
-                <div style={{ overflowX: "auto" }}>
-                    <table
-                        style={{
-                            width: "100%",
-                            borderCollapse: "collapse",
-                            fontSize: 13.5,
-                        }}
-                    >
+            <div className="overflow-hidden rounded-[14px] border border-[#1a1408]/10 bg-white">
+                <div className="overflow-x-auto">
+                    <table className="w-full border-collapse text-[13.5px]">
                         <thead>
-                            <tr
-                                style={{
-                                    background: "rgb(var(--color-ink) / 0.04)",
-                                    borderBottom: "1px solid rgb(var(--color-ink) / 0.08)",
-                                }}
-                            >
+                            <tr className="border-b border-[#1a1408]/10 bg-[#1a1408]/5">
                                 {["Name", "Email", "Address", "Rating", "Actions"].map((col) => (
                                     <th
                                         key={col}
-                                        style={{
-                                            textAlign: "left",
-                                            padding: "13px 18px",
-                                            fontWeight: 650,
-                                            fontSize: 12.5,
-                                            opacity: 0.6,
-                                            letterSpacing: "0.02em",
-                                            whiteSpace: "nowrap",
-                                        }}
+                                        className="whitespace-nowrap px-[18px] py-3 text-left text-[12.5px] font-semibold tracking-wide text-[#1a1408]/60"
                                     >
                                         {col}
                                     </th>
@@ -483,47 +310,17 @@ export function Stores({ stores = defaultStores }) {
                         <tbody>
                             {paginated.length === 0 ? (
                                 <tr>
-                                    <td colSpan={5} style={{ padding: 0 }}>
-                                        <div
-                                            style={{
-                                                display: "flex",
-                                                flexDirection: "column",
-                                                alignItems: "center",
-                                                justifyContent: "center",
-                                                textAlign: "center",
-                                                padding: "56px 24px",
-                                            }}
-                                        >
-                                            <div
-                                                style={{
-                                                    width: 48,
-                                                    height: 48,
-                                                    borderRadius: 12,
-                                                    background: "rgb(var(--color-ink) / 0.06)",
-                                                    display: "flex",
-                                                    alignItems: "center",
-                                                    justifyContent: "center",
-                                                    marginBottom: 14,
-                                                }}
-                                            >
-                                                <StoreIcon size={20} style={{ opacity: 0.4 }} />
+                                    <td colSpan={5} className="p-0">
+                                        <div className="flex flex-col items-center justify-center px-6 py-14 text-center">
+                                            <div className="mb-3.5 flex h-12 w-12 items-center justify-center rounded-xl bg-[#1a1408]/5">
+                                                <StoreIcon size={20} className="text-[#1a1408]/40" />
                                             </div>
-                                            <div
-                                                className="font-display"
-                                                style={{ fontSize: 15, fontWeight: 700 }}
-                                            >
+                                            <div className="font-display text-[15px] font-bold text-[#1a1408]">
                                                 {query.trim()
                                                     ? "No stores match your search"
                                                     : "No stores registered yet"}
                                             </div>
-                                            <div
-                                                style={{
-                                                    fontSize: 13,
-                                                    opacity: 0.5,
-                                                    marginTop: 5,
-                                                    maxWidth: 280,
-                                                }}
-                                            >
+                                            <div className="mt-1.5 max-w-[280px] text-[13px] text-[#1a1408]/50">
                                                 {query.trim()
                                                     ? "Try a different name, email or address."
                                                     : "Stores added to the platform will appear here."}
@@ -535,62 +332,36 @@ export function Stores({ stores = defaultStores }) {
                                 paginated.map((store, idx) => (
                                     <tr
                                         key={store.id}
-                                        style={{
-                                            borderBottom:
-                                                idx < paginated.length - 1
-                                                    ? "1px solid rgb(var(--color-ink) / 0.06)"
-                                                    : "none",
-                                        }}
+                                        className={
+                                            idx < paginated.length - 1
+                                                ? "border-b border-[#1a1408]/5"
+                                                : ""
+                                        }
                                     >
-                                        <td style={{ padding: "14px 18px", fontWeight: 600 }}>
+                                        <td className="px-[18px] py-3.5 font-semibold text-[#1a1408]">
                                             {store.name}
                                         </td>
-                                        <td style={{ padding: "14px 18px", opacity: 0.75 }}>
+                                        <td className="px-[18px] py-3.5 text-[#1a1408]/75">
                                             {store.email}
                                         </td>
-                                        <td style={{ padding: "14px 18px" }}>
-                                            <div
-                                                style={{
-                                                    display: "inline-flex",
-                                                    alignItems: "center",
-                                                    gap: 5,
-                                                    opacity: 0.75,
-                                                }}
-                                            >
-                                                <MapPin size={13} style={{ opacity: 0.6 }} />
+                                        <td className="px-[18px] py-3.5">
+                                            <div className="inline-flex items-center gap-1.5 text-[#1a1408]/75">
+                                                <MapPin size={13} className="text-[#1a1408]/50" />
                                                 {store.address}
                                             </div>
                                         </td>
-                                        <td style={{ padding: "14px 18px" }}>
-                                            <div
-                                                style={{
-                                                    display: "inline-flex",
-                                                    alignItems: "center",
-                                                    gap: 8,
-                                                }}
-                                            >
+                                        <td className="px-[18px] py-3.5">
+                                            <div className="inline-flex items-center gap-2">
                                                 <StaticStars value={store.overallRating} size={13} />
-                                                <span style={{ fontWeight: 650 }}>
+                                                <span className="font-semibold text-[#1a1408]">
                                                     {store.overallRating.toFixed(1)}
                                                 </span>
                                             </div>
                                         </td>
-                                        <td style={{ padding: "14px 18px" }}>
+                                        <td className="px-[18px] py-3.5">
                                             <button
                                                 onClick={() => setSelectedStore(store)}
-                                                style={{
-                                                    display: "inline-flex",
-                                                    alignItems: "center",
-                                                    gap: 6,
-                                                    padding: "6px 12px",
-                                                    borderRadius: 8,
-                                                    border: "1px solid rgb(var(--color-ink) / 0.12)",
-                                                    background: "transparent",
-                                                    color: "rgb(var(--color-ink))",
-                                                    fontSize: 12.5,
-                                                    fontWeight: 600,
-                                                    cursor: "pointer",
-                                                }}
+                                                className="inline-flex cursor-pointer items-center gap-1.5 rounded-lg border border-[#1a1408]/10 bg-transparent px-3 py-1.5 text-[12.5px] font-semibold text-[#1a1408] transition-colors hover:bg-[#1a1408]/5"
                                             >
                                                 <Eye size={13} strokeWidth={2} />
                                                 View
@@ -605,37 +376,18 @@ export function Stores({ stores = defaultStores }) {
 
                 {/* Pagination */}
                 {filtered.length > PAGE_SIZE && (
-                    <div
-                        style={{
-                            display: "flex",
-                            alignItems: "center",
-                            justifyContent: "space-between",
-                            padding: "12px 18px",
-                            borderTop: "1px solid rgb(var(--color-ink) / 0.08)",
-                            background: "rgb(var(--color-ink) / 0.02)",
-                        }}
-                    >
-                        <span style={{ fontSize: 13, opacity: 0.5 }}>
+                    <div className="flex items-center justify-between border-t border-[#1a1408]/10 bg-[#1a1408]/5 px-[18px] py-3">
+                        <span className="text-[13px] text-[#1a1408]/50">
                             Page {currentPage} of {totalPages} · {filtered.length} total
                         </span>
-                        <div style={{ display: "flex", gap: 8 }}>
+                        <div className="flex gap-2">
                             <button
                                 onClick={() => setPage((p) => Math.max(1, p - 1))}
                                 disabled={currentPage <= 1}
-                                style={{
-                                    display: "inline-flex",
-                                    alignItems: "center",
-                                    gap: 4,
-                                    padding: "6px 12px",
-                                    borderRadius: 8,
-                                    border: "1px solid rgb(var(--color-ink) / 0.12)",
-                                    background: "transparent",
-                                    color: "rgb(var(--color-ink))",
-                                    fontSize: 13,
-                                    fontWeight: 600,
-                                    cursor: currentPage <= 1 ? "not-allowed" : "pointer",
-                                    opacity: currentPage <= 1 ? 0.35 : 1,
-                                }}
+                                className={`inline-flex items-center gap-1 rounded-lg border border-[#1a1408]/10 bg-transparent px-3 py-1.5 text-[13px] font-semibold text-[#1a1408] ${currentPage <= 1
+                                        ? "cursor-not-allowed opacity-35"
+                                        : "cursor-pointer hover:bg-[#1a1408]/5"
+                                    }`}
                             >
                                 <ChevronLeft size={15} />
                                 Prev
@@ -643,20 +395,10 @@ export function Stores({ stores = defaultStores }) {
                             <button
                                 onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
                                 disabled={currentPage >= totalPages}
-                                style={{
-                                    display: "inline-flex",
-                                    alignItems: "center",
-                                    gap: 4,
-                                    padding: "6px 12px",
-                                    borderRadius: 8,
-                                    border: "1px solid rgb(var(--color-ink) / 0.12)",
-                                    background: "transparent",
-                                    color: "rgb(var(--color-ink))",
-                                    fontSize: 13,
-                                    fontWeight: 600,
-                                    cursor: currentPage >= totalPages ? "not-allowed" : "pointer",
-                                    opacity: currentPage >= totalPages ? 0.35 : 1,
-                                }}
+                                className={`inline-flex items-center gap-1 rounded-lg border border-[#1a1408]/10 bg-transparent px-3 py-1.5 text-[13px] font-semibold text-[#1a1408] ${currentPage >= totalPages
+                                        ? "cursor-not-allowed opacity-35"
+                                        : "cursor-pointer hover:bg-[#1a1408]/5"
+                                    }`}
                             >
                                 Next
                                 <ChevronRight size={15} />
