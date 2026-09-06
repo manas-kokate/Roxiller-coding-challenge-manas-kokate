@@ -1,0 +1,34 @@
+@import "tailwindcss";
+
+
+/* ------------------------------------------------------------------ */
+/* THEME TOKENS                                                        */
+/* Change these two triplets (and only these) to re-theme the whole    */
+/* project. Any component that reads rgb(var(--color-bg)) /            */
+/* rgb(var(--color-ink)) picks up the change automatically.            */
+/* ------------------------------------------------------------------ */
+:root {
+    --color-bg: 235 227 167;
+    /* #EBE3A7 cream */
+    --color-ink: 46 41 16;
+    /* #2E2910 dark ink */
+}
+
+/* Apply this class to any container (e.g. the page root) to flip the
+   theme to dark mode. */
+.theme-dark {
+    --color-bg: 46 41 16;
+    --color-ink: 235 227 167;
+}
+
+/* ------------------------------------------------------------------ */
+/* FONTS                                                               */
+/* ------------------------------------------------------------------ */
+.font-display {
+    font-family: 'Fraunces', serif;
+}
+
+.font-body {
+    font-family: 'Manrope', sans-serif;
+    font-weight: 500;
+}
